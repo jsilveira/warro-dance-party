@@ -4,7 +4,7 @@ import feathers from '@feathersjs/client';
 let socketUri = window.realtimeChatUri || 'http://local.opinautos.com:3030';
 console.log(`Using realtime socket at${socketUri}`);
 
-const socket = io(socketUri);
+const socket = io(socketUri, {transports: ['websocket']});
 const client = feathers();
 
 client.configure(feathers.socketio(socket, {
