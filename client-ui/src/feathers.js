@@ -7,7 +7,10 @@ console.log(`Using realtime socket at${socketUri}`);
 const socket = io(socketUri);
 const client = feathers();
 
-client.configure(feathers.socketio(socket));
+client.configure(feathers.socketio(socket, {
+  timeout: 30000
+}));
+
 client.configure(feathers.authentication({
   storage: window.localStorage
 }));
