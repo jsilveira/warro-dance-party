@@ -47,7 +47,7 @@ export default class Login extends Component {
 
 
   render() {
-    return <main className="login container">
+    return <div className="login container">
       <div className="row">
         <div className="col-md-4 offset-md-4 text-center  bg-white shadow-sm rounded mt-5 p-2">
           <h3 className="mb-2">¿Quién sos 🐱?</h3>
@@ -64,6 +64,6 @@ export default class Login extends Component {
           </div>
         </div>
       </div>
-    </main>;
+    </div>;
   }
 }

@@ -111,3 +111,5 @@ lib/
 data/
 test/data
 .nyc_output
+
+.cache/*
