@@ -16,7 +16,7 @@
     "dev": "nodemon src/",
     "start": "node src/",
     "clean": "shx rm -rf test/data/",
-    "build-ui": "rm public/ui/* & parcel build ../client-ui/public/index.html -d public/ui --public-url .",
+    "build-ui": "rm public/ui/* & parcel build ../client-ui/public/index.html -d public/ui --public-url . --no-content-hash",
     "deploy": "git subtree push --prefix server heroku master",
     "update-dependencies": "ncu -u"
   },
