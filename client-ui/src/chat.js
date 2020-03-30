@@ -1,8 +1,10 @@
-import React, {Component} from 'react';
+import _ from 'lodash';
 import moment from 'moment';
+import React, {Component} from 'react';
+
 import client from './feathers';
 import Reactions from './reactions';
-import _ from 'lodash';
+import emojis from './emojis'
 
 const name = (user) => user.email.split('@')[0]
 
@@ -50,10 +52,29 @@ class Chat extends Component {
   potentialEnter(keyEvent) {
     if (keyEvent.key === "Enter") {
       this.sendMessage()
+    } else if(keyEvent.key === "Tab") {
+      let msg = this.state.message || "";
+
+      let [,prefix] = msg.match(/:([\w_]+)$/) || [];
+
+      if(prefix) {
+        const emojiMatch = _.filter(_.keys(emojis), em => em.startsWith(prefix.toLowerCase()));
+        if (emojiMatch.length) {
+          this.setState({message: msg.replace(/:[\w_]+$/, emojis[emojiMatch[0]])})
+        }
+      }
+      keyEvent.preventDefault();
     }
   }
 
   inputChange(text) {
+    if (text.startsWith(':')) {
+      let emojiMatch = emojis[text.slice(1)];
+      if (emojiMatch) {
+        text = emojiMatch;
+      }
+    }
+
     this.setState({message: text})
   }
 

@@ -25,7 +25,7 @@ class Application extends Component {
         messages.find({
           query: {
             $sort: { createdAt: -1 },
-            $limit: 50
+            $limit: 400
           }
         }),
         room.find()
