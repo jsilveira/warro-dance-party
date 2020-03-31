@@ -24,7 +24,7 @@ class Chat extends Component {
 
       if (text) {
         client.service('messages').create({text}).then(() => {
-          this.setState({message: ''})
+          this.setState({message: '', autocomplete: null})
         });
       } else {
         this.sendMessage("🤜");
@@ -49,33 +49,83 @@ class Chat extends Component {
     client.service('messages').removeListener('created', this.scrollToBottom);
   }
 
-  potentialEnter(keyEvent) {
+  keyPressedHandler(keyEvent) {
     if (keyEvent.key === "Enter") {
       this.sendMessage()
-    } else if(keyEvent.key === "Tab") {
-      let msg = this.state.message || "";
+    } else if (keyEvent.key === "Tab") {
+      let autocomplete = this.state.autocomplete;
+      let nextEmoji = this.state.nextEmoji;
 
-      let [,prefix] = msg.match(/:([\w_]+)$/) || [];
+      if (autocomplete && autocomplete.length) {
+        let msg = this.state.message || "";
 
-      if(prefix) {
-        const emojiMatch = _.filter(_.keys(emojis), em => em.startsWith(prefix.toLowerCase()));
-        if (emojiMatch.length) {
-          this.setState({message: msg.replace(/:[\w_]+$/, emojis[emojiMatch[0]])})
+        let [, prefix] = msg.match(/:([\w_]+)$/) || [];
+
+        if (prefix) {
+          msg = msg.replace(/:[\w_]+$/, emojis[autocomplete[0]]);
+        } else {
+          msg = msg.replace(emojis[autocomplete[nextEmoji ? (nextEmoji-1) : autocomplete.length - 1]], emojis[autocomplete[nextEmoji]])
         }
+        this.setState({nextEmoji: (nextEmoji + 1) % autocomplete.length, message: msg})
       }
+
+
       keyEvent.preventDefault();
     }
   }
 
   inputChange(text) {
-    if (text.startsWith(':')) {
-      let emojiMatch = emojis[text.slice(1)];
-      if (emojiMatch) {
-        text = emojiMatch;
+    let [,prefix] = text.match(/:([\w_]+)$/) || [];
+
+    if (prefix) {
+      let exactEmojiMatch = emojis[prefix];
+      if (exactEmojiMatch) {
+        text = text.replace(/:([\w_]+)$/, exactEmojiMatch);
       }
+
+      let emojiSearch = this.emojiCandidates(prefix);
+
+      if (emojiSearch.length) {
+        this.setState({autocomplete: emojiSearch, nextEmoji: (exactEmojiMatch && emojiSearch.length > 1) ? 1 : 0})
+      } else {
+        this.setState({autocomplete: null})
+      }
+    } else {
+      this.setState({autocomplete: null})
+
     }
 
     this.setState({message: text})
+  }
+
+  emojiCandidates(prefix) {
+    let emojiMatch = _.filter(_.keys(emojis), em => em.startsWith(prefix.toLowerCase()));
+
+    if (emojiMatch.length < 20) {
+      emojiMatch = emojiMatch.concat(_.filter(_.keys(emojis), em => em.indexOf(prefix.toLowerCase()) > 0))
+    }
+    return emojiMatch;
+  }
+
+  renderSuggestions() {
+    const {autocomplete, nextEmoji} = this.state;
+    if (autocomplete) {
+      return <div className={'autocomplete bg-dark rounded p-1 shadow-sm ml-4 mr-4 mb-2'}>
+        Press <span className={'key'}>TAB</span> for &nbsp;
+
+        {
+          _.map(autocomplete.slice(0, 15), (emojiName,i) => <span
+            className={'emoji p-1 text-lg '+(nextEmoji == (i+1) ? 'bg-primary rounded' : '')}
+            key={emojiName}
+            title={emojiName}>
+          {emojis[emojiName]}
+        </span>)
+        }
+        {autocomplete.length > 15 ? <span className={'small'}>... and {autocomplete.length} more</span> : null}
+      </div>
+    } else {
+      return null;
+    }
   }
 
   render() {
@@ -114,6 +164,7 @@ class Chat extends Component {
             </span>)}
         </div>
 
+        { this.renderSuggestions() }
       </div>
 
       <div className="send-msg-bar">
@@ -121,7 +172,8 @@ class Chat extends Component {
           <input autoFocus={true}
                  className={"d-flex flex1-1 form-control"}
                  value={this.state.message || ""}
-                 onKeyDown={(e) => this.potentialEnter(e)}
+                 placeholder={"Chat here... (use :NAME for Emojis ;)"}
+                 onKeyDown={(e) => this.keyPressedHandler(e)}
                  onChange={e => this.inputChange(e.target.value)}
                  type="text"
           />
