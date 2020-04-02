@@ -2,6 +2,8 @@ body {
   font-family: Roboto, Roboto, Arial, Helvetica, sans-serif;;
 }
 
+@mobile-width: 700px;
+
 #app {
   position: fixed;
   height: 100%;
@@ -60,6 +62,10 @@ body {
     height: 60px;
     //width: 60px;
 
+    @media(max-width: @mobile-width) {
+      zoom: 0.5;
+    }
+
     img {
       border-radius: 50%;
       height: 60px;
@@ -86,6 +92,11 @@ body {
     grid-row-start: 2;
     grid-row-end: 3;
     align-self: end;
+    overflow: hidden;
+    padding-left: 1.5rem;
+
+    .many-users .avatar{
+    }
   }
 
   .send-msg-bar {
@@ -99,6 +110,8 @@ body {
     grid-column-end: 3;
     grid-row-start: 3;
     grid-row-end: 4;
+
+    padding: 0 1.5rem 1.5rem 1.5rem !important;
   }
 
   .autocomplete {
@@ -123,6 +136,114 @@ body {
     }
   }
 
+  .chat {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    position: relative;
+    overflow-y:auto;
+    border-bottom: solid 1px transparent;
+    pointer-events: visible;
+
+    color: white;
+    border-radius: 5px;
+    font-size: 0.9em;
+
+    .date-bar {
+      min-width: 29px;
+    }
+
+    img.avatar {
+      border-radius: 100%;
+      height: 24px;
+      width: 24px;
+      flex: none;
+    }
+
+    .message {
+      .message-content {
+        font-size: 14.2px;
+        word-break: break-word;
+        font-family: "Segoe UI", "Helvetica Neue", Helvetica, "Lucida Grande", Arial;
+      }
+      //flex: 0 0 auto;
+
+      .username {
+        //font-weight: 700;
+        color: #35cd96;
+        font-size: 11px;
+      }
+
+      img.avatar {
+        margin: 0px;
+      }
+      .sent-date {
+        margin-top: 4px;
+        color: #969696;
+      }
+    }
+  }
+}
+
+
+@media(max-width: @mobile-width) {
+  .dancefloor {
+    grid-template-rows: 30% 36% auto min-content;
+    grid-template-columns: 100%;
+
+    .reaction {
+      grid-column-start: 1;
+      grid-column-end: 2;
+
+      grid-row-start: 2;
+      grid-row-end: 3;
+
+      &.emoji {
+        background: transparent;
+        color: white;
+        animation: zoomEmoji 0.5s 1 linear forwards;
+        text-shadow: 0px 0px 10px #35cd96, 0px 0px 3px #35cd96;
+      }
+    }
+
+    .online-users {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 3;
+      grid-row-end: 4;
+      align-self: end;
+      padding: 0 5px;
+
+      .avatar {
+        zoom: 0.8;
+      }
+
+      .many-users .avatar{
+        zoom: 0.5;
+      }
+    }
+
+    .send-msg-bar {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 4;
+      grid-row-end: 5;
+
+      padding: 0 !important;
+    }
+
+    .autocomplete {
+
+    }
+
+    .chat {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 1;
+      grid-row-end: 2;
+    }
+  }
 }
 
 @keyframes zoom {
@@ -161,54 +282,6 @@ body {
   }
 }
 
-.chat {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 1;
-  grid-row-end: 3;
-  position: relative;
-  overflow-y:auto;
-  border-bottom: solid 1px transparent;
-  pointer-events: visible;
-
-  color: white;
-  border-radius: 5px;
-  font-size: 0.9em;
-
-  .date-bar {
-    min-width: 29px;
-  }
-
-  img.avatar {
-    border-radius: 100%;
-    height: 24px;
-    width: 24px;
-    flex: none;
-  }
-
-  .message {
-    .message-content {
-      font-size: 14.2px;
-      word-break: break-word;
-      font-family: "Segoe UI", "Helvetica Neue", Helvetica, "Lucida Grande", Arial;
-    }
-    //flex: 0 0 auto;
-
-    .username {
-      //font-weight: 700;
-      color: #35cd96;
-      font-size: 11px;
-    }
-
-    img.avatar {
-      margin: 0px;
-    }
-    .sent-date {
-      margin-top: 4px;
-      color: #969696;
-    }
-  }
-}
 
 .shadow-sm {
   box-shadow: 0 .125rem .25rem rgba(0,0,0,.4)!important;

@@ -129,7 +129,7 @@ class Chat extends Component {
   }
 
   render() {
-    const {users, messages} = this.props;
+    let {users, messages} = this.props;
 
     let dontTakeFocus = e => e.preventDefault();
     return <div className="dancefloor">
@@ -153,8 +153,8 @@ class Chat extends Component {
         {/*  </h4>*/}
         {/*</div>*/}
 
-        <div className="d-flex justify-content-around mb-2">
-          {users.map(user => <span key={user.id} className={'text-center'}>
+        <div className={"d-flex justify-content-around mb-2 flex-wrap "+(users.length > 20 ? 'many-users' : '')}>
+          {users.map((user,i) => <span key={user.id+i} className={'text-center'}>
               <span className="block relative">
                 <div className={'avatar'}>
                   <img src={user.avatar} alt={user.email} className="shadow-sm"/>
@@ -168,7 +168,7 @@ class Chat extends Component {
       </div>
 
       <div className="send-msg-bar">
-        <div className="ml-4 mr-4 mb-4 rounded d-flex flex-row flex-space-between p-2 bg-dark shadow-sm" id="send-message">
+        <div className="rounded d-flex flex-row flex-space-between p-2 bg-dark shadow-sm" id="send-message">
           <input autoFocus={true}
                  className={"d-flex flex1-1 form-control"}
                  value={this.state.message || ""}
