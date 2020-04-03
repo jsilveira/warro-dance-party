@@ -6,6 +6,7 @@ console.log(`Using realtime socket at${socketUri}`);
 
 const socket = io(socketUri, {transports: ['websocket']});
 const client = feathers();
+window.io = socket;
 
 client.configure(feathers.socketio(socket, {
   timeout: 30000

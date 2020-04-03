@@ -18,6 +18,22 @@ class Application extends Component {
     // Try to authenticate with the JWT stored in localStorage
     client.authenticate().catch(() => this.setState({ login: null }));
 
+    window.io.on("reconnecting", (delay, attempt) => {
+      console.log("Disconnected ... trying to reconnect.", delay, attempt);
+      this.setState({login: undefined})
+    });
+
+    window.io.on("reconnect", () => {
+      console.log("reconnect")
+      client.authenticate().catch(() => this.setState({ login: null }));
+    });
+
+    window.io.on("reconnect_failed", () => {
+      window.io.socket.reconnect();
+      console.log("Reconnect failed")
+    });
+
+
     // On successfull login
     client.on('authenticated', login => {
       // Get all users and messages
