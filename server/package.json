@@ -36,6 +36,7 @@
     "helmet": "^3.21.3",
     "nedb": "^1.8.0",
     "serve-favicon": "^2.5.0",
+    "uuid": "^7.0.3",
     "winston": "^3.2.1"
   },
   "devDependencies": {

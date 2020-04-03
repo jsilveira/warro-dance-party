@@ -2,6 +2,7 @@
 const { Service } = require('feathers-memory');
 // We need this to create the MD5 hash
 const crypto = require('crypto');
+const uuid = require('uuid');
 
 // The Gravatar image service
 const gravatarUrl = 'https://s.gravatar.com/avatar';
@@ -21,7 +22,8 @@ exports.Users = class Users extends Service {
       email,
       password,
       githubId,
-      avatar
+      avatar,
+      id: uuid.v4()
     };
 
     if((await this.find({query: {email}})).total) {
@@ -34,7 +36,7 @@ exports.Users = class Users extends Service {
 
   async find(... args) {
     let res = await super.find(... args);
-    console.log('Find', args[0].query, res.total)
+    console.log('Find', args[0].query, res.total);
     return res;
   }
 };
