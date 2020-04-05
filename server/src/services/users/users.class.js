@@ -7,7 +7,7 @@ const uuid = require('uuid');
 // The Gravatar image service
 const gravatarUrl = 'https://s.gravatar.com/avatar';
 // The size query. Our chat needs 60px images
-const query = 's=60';
+const query = 's=60&d=blank';
 
 exports.Users = class Users extends Service {
   async create (data, params) {

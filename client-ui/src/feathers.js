@@ -1,7 +1,8 @@
 import io from 'socket.io-client';
 import feathers from '@feathersjs/client';
 
-let socketUri = window.realtimeChatUri || 'http://local.opinautos.com:3030';
+// let socketUri = window.realtimeChatUri || 'http://local.opinautos.com:3030';
+let socketUri = window.realtimeChatUri || 'https://warro-dance-party.herokuapp.com';
 console.log(`Using realtime socket at${socketUri}`);
 
 const socket = io(socketUri, {transports: ['websocket']});

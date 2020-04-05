@@ -1,8 +1,17 @@
 body {
-  font-family: Roboto, Roboto, Arial, Helvetica, sans-serif;;
+  font-family: Roboto, Roboto, Arial, Helvetica, sans-serif;
+
+  //background: url(https://iili.io/JCH1m7.jpg) no-repeat center center fixed;
+  //background-size: cover;
+  > div {
+    background: #181832;
+  background:linear-gradient(415deg, #242440 10%, #0c0c19 100%);
+  }
 }
 
 @mobile-width: 700px;
+//@bgChat: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 30%);
+@bgChat: rgba(0,0,0,0.0);
 
 #app {
   position: fixed;
@@ -23,54 +32,170 @@ body {
   width: 100%;
   position: fixed;
 
-  grid-template-rows: auto auto min-content;
-  grid-template-columns: auto 300px;
+  grid-template-rows: 100px auto min-content;
+  grid-template-columns: auto 450px;
 
   display: grid;
 
-  .reaction {
+  .reactions {
     grid-column-start: 1;
-    grid-column-end: 1;
+    grid-column-end: 3;
     grid-row-start: 1;
-    grid-row-end: 1;
+    grid-row-end: 4;
+    position: relative;
 
-    position: fixed;
-    z-index: 999;
-    background: #2daf80;
-    color: white;
-    font-weight: bold;
-    border-radius: 5px;
-    padding: 0.25em;
-    font-size: 2em;
-    text-align: center;
-    display: inline-block;
-    animation: zoom 2s 1 linear forwards;
-    pointer-events: none;
-
-    &.emoji {
-      background: transparent;
+    .reaction {
+      position: fixed;
+      z-index: 999;
+      background: #2daf80;
       color: white;
-      animation: zoomEmoji 0.5s 1 linear forwards;
-      text-shadow: 0px 0px 10px #35cd96, 0px 0px 3px #35cd96;
+      font-weight: bold;
+      border-radius: 5px;
+      padding: 0.25em;
+      font-size: 2em;
+      text-align: center;
+      display: inline-block;
+      animation: zoom 2s 1 linear forwards;
+      pointer-events: none;
+
+      &.emoji {
+        background: transparent;
+        color: white;
+        animation: zoomEmoji 0.5s 1 linear forwards;
+        text-shadow: 0px 0px 10px #35cd96, 0px 0px 3px #35cd96;
+      }
+    }
+  }
+
+  .player-controls {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+
+    position: relative;
+  }
+
+  .la-w {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 4;
+
+    position: relative;
+  }
+
+  .bg-side {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+
+    background: url(https://iili.io/JCH1m7.jpg) no-repeat center center fixed;
+    background-size: cover;
+    filter: blur(20px) brightness(0.5);
+    height: 100%;
+    width: 100%;
+    //overflow: hidden;
+    z-index: -1;
+    display: none;
+  }
+
+  .online-users{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 4;
+    align-self: end;
+    position: relative;
+    overflow: hidden;
+    padding-left: 1.5rem;
+    height: 100%;
+    width: 100%;
+
+    .many-users .avatar{
     }
   }
 
   .avatar {
-    max-width: 100%;
-    margin-bottom: 10px;
-    display: inline-block;
-    height: 60px;
-    //width: 60px;
+    &.circle-position {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transition: margin-left 1s, margin-top 1s, opacity 1s;
+      pointer-events: visible;
 
-    @media(max-width: @mobile-width) {
-      zoom: 0.5;
+      &:hover {
+        text-align: center;
+        .avatar-name {
+          display: inline-block;
+        }
+        z-index: 999;
+      }
     }
 
-    img {
+
+
+    .round-avatar {
+      text-align: center;
+      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+      height: 50px;
+      width: 50px;
       border-radius: 50%;
-      height: 60px;
-      z-index: -1;
+      //background: ;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
       position: relative;
+      text-transform: uppercase;
+
+      font-size: 12px;
+      line-height: 20px;
+      font-weight: 100;
+      color: white;
+      //text-shadow: 1px 1px 2px black, 0 0 5px black;
+
+      &:hover {
+        border: none !important;
+      }
+      .gravatar {
+        height: 50px;
+        //width: 100%;
+        top: 0;
+        left: 0;
+        position: absolute;
+        z-index: 5;
+      }
+    }
+
+    &:hover {
+      border: none;
+    }
+
+    .initials {
+      padding: 0 12px;
+      position: relative;
+      opacity: 0.6;
+    }
+
+    .avatar-fill {
+      height: 110%;
+      width: 110%;
+      left: -5%;
+      top: -5%;
+      position: absolute;
+      display: none;
+      z-index: -1;
+    }
+    &:hover {
+      .avatar-fill {
+        display: inline-block;
+      }
+      .initials {
+        color: white !important;
+        opacity: 0.9;
+      }
     }
 
     .avatar-name {
@@ -83,35 +208,55 @@ body {
       font-size: 11px;
       top: calc(60px / 2 - 15px / 2);
       height: 15px;
-    }
-  }
-
-  .online-users{
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    align-self: end;
-    overflow: hidden;
-    padding-left: 1.5rem;
-
-    .many-users .avatar{
+      display: none;
     }
   }
 
   .send-msg-bar {
     pointer-events: visible;
-    //position: fixed;
-    //bottom: 0;
-    //left: 0;
-    //width: 100%;
 
-    grid-column-start: 1;
+    grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 3;
     grid-row-end: 4;
 
-    padding: 0 1.5rem 1.5rem 1.5rem !important;
+    background: @bgChat;
+
+    padding: 0 1rem 1rem 1rem !important;
+  }
+
+  .player {
+    pointer-events: visible;
+    overflow: auto;
+    //box-shadow: 0 0 50px 50px white;
+    padding-top: 15px;
+    padding-left: 20px;
+
+    .artist {
+      text-transform: uppercase;
+      font-size: 1em;
+      color: #AAA;
+    }
+    .song-title {
+      font-size: 1.2em;
+      color: white;
+    }
+  }
+
+  .w {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -120px;
+    margin-top: -120px;
+    height: 240px;
+    width: 240px;
+    overflow: auto;
+
+    //background: red;
+    //mask:url(../public/btn-pause.png);
+    background: url(../public/doblevreal.svg) no-repeat;
+    background-position: center center;
   }
 
   .autocomplete {
@@ -141,29 +286,38 @@ body {
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 3;
+    background: @bgChat;
+
     position: relative;
     overflow-y:auto;
     border-bottom: solid 1px transparent;
     pointer-events: visible;
 
     color: white;
-    border-radius: 5px;
+    //border-radius: 5px;
     font-size: 0.9em;
 
     .date-bar {
       min-width: 29px;
     }
 
-    img.avatar {
-      border-radius: 100%;
-      height: 24px;
-      width: 24px;
-      flex: none;
+    .avatar {
+      zoom: 0.5;
     }
 
     .message {
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.1);
+      //background: rgba(49, 49, 49, 0.5);
+      //border-bottom: solid 1px rgba(0,0,0,0.2);
+      margin-top: 0.5rem;
+
+      &.message-continue {
+        margin-top: 3px;
+      }
+
       .message-content {
-        font-size: 14.2px;
+        font-size: 13px;
         word-break: break-word;
         font-family: "Segoe UI", "Helvetica Neue", Helvetica, "Lucida Grande", Arial;
       }
@@ -183,13 +337,16 @@ body {
         color: #969696;
       }
     }
+    .text-time {
+      color: #686868;
+    }
   }
 }
 
 
 @media(max-width: @mobile-width) {
   .dancefloor {
-    grid-template-rows: 30% 36% auto min-content;
+    grid-template-rows: 50% auto min-content;
     grid-template-columns: 100%;
 
     .reaction {
@@ -207,28 +364,51 @@ body {
       }
     }
 
+    .player-controls {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 1;
+      grid-row-end: 2;
+      zoom: 0.7;
+    }
+
+    .bg-side {
+      grid-column-start: 1;
+      grid-column-end: 2;
+      grid-row-start: 2;
+      grid-row-end: 4;
+    }
+
     .online-users {
       grid-column-start: 1;
       grid-column-end: 2;
-      grid-row-start: 3;
-      grid-row-end: 4;
+      grid-row-start: 2;
+      grid-row-end: 3;
       align-self: end;
       padding: 0 5px;
+      zoom: 0.7;
+      overflow: visible;
+      //z-index: -1;
 
       .avatar {
-        zoom: 0.8;
+        //zoom: 0.8;
       }
 
       .many-users .avatar{
-        zoom: 0.5;
+        //zoom: 0.5;
       }
+    }
+
+    audio {
+      zoom: 1.7;
+      width: 160px;
     }
 
     .send-msg-bar {
       grid-column-start: 1;
       grid-column-end: 2;
-      grid-row-start: 4;
-      grid-row-end: 5;
+      grid-row-start: 3;
+      grid-row-end: 4;
 
       padding: 0 !important;
     }
@@ -240,8 +420,8 @@ body {
     .chat {
       grid-column-start: 1;
       grid-column-end: 2;
-      grid-row-start: 1;
-      grid-row-end: 2;
+      grid-row-start: 2;
+      grid-row-end: 3;
     }
   }
 }
@@ -287,3 +467,88 @@ body {
   box-shadow: 0 .125rem .25rem rgba(0,0,0,.4)!important;
 }
 
+audio {
+  //background: red;
+  width: 180px;
+  height: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  zoom: 1.3;
+
+
+  &:focus {
+    outline: none;
+  }
+  &::-webkit-media-controls {
+  }
+  &::-webkit-media-controls-panel {
+    //background: #CCC;
+
+    //margin: 5px;
+    border-radius: 0;
+    //display: none;
+  }
+  &::-webkit-media-controls-mute-button {
+
+  }
+  &::-webkit-media-controls-play-button {
+    color: white;
+  }
+  &::-webkit-media-controls-timeline-container {
+  }
+  &::-webkit-media-controls-current-time-display {
+    //background: green;
+    //border-radius: 50%;
+    //width: 1em;
+    //height: 1em;
+    //color: transparent;
+    //overflow: hidden;
+    display: none;
+  }
+  &::-webkit-media-controls-time-remaining-display {
+    opacity: 0;
+    pointer-events: none;
+  }
+  &::-webkit-media-controls-timeline {
+    opacity: 0;
+    pointer-events: none;
+  }
+  &::-webkit-media-controls-volume-slider-container {
+
+  }
+  &::-webkit-media-controls-volume-slider {
+
+  }
+}
+
+.player.state-playing audio::-webkit-media-controls-panel { background: white; }
+.player.state-paused audio::-webkit-media-controls-panel { border: #ddd; }
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 5px;
+}
+
+
+@keyframes twinkle {
+  0% {
+    transform: scale(1, 1);
+    background: rgba(255, 255, 255, 0);
+    animation-timing-function: linear;
+  }
+  40% {
+    transform: scale(0.8, 0.8);
+    background: rgba(255, 255, 255, 1);
+    animation-timing-function: ease-out;
+  }
+  80% {
+    background: rgba(255, 255, 255, 0);
+    transform: scale(1, 1);
+  }
+  100% {
+    background: rgba(255, 255, 255, 0);
+    transform: scale(1, 1);
+  }
+}
