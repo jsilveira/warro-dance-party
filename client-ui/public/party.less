@@ -4,7 +4,7 @@ body {
   //background: url(https://iili.io/JCH1m7.jpg) no-repeat center center fixed;
   //background-size: cover;
   > div {
-    background: #181832;
+    background: #fff;
   background:linear-gradient(415deg, #242440 10%, #0c0c19 100%);
   }
 }
@@ -12,6 +12,63 @@ body {
 @mobile-width: 700px;
 //@bgChat: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 30%);
 @bgChat: rgba(0,0,0,0.0);
+
+.message.d-flex.flex-row.p-1 {}
+
+.message-wrapper {
+    display: inline-block;
+    background: rgba(114, 114, 227, 0.1);
+    border-radius: 20px;
+    padding: .5em 1em .75em 1em;
+    line-height: 1em;
+}
+
+.send-msg-bar input {
+    border: 3px solid #384363;
+    background: none;
+    font-size: .875rem;
+    line-height: 1.5rem;
+    padding: 1.1rem 1rem;
+    border-radius: 20px;
+    flex: 1;
+    color: #fff;
+    box-shadow: none !important;
+    outline: none;
+}
+
+.send-msg-bar input:focus {
+  border-color: #fff;
+}
+.send-msg-bar input::placeholder {
+  color: #91A0CC;
+}
+.send-msg-bar input:placeholder-shown ~ .btn-send {
+  display: none;
+}
+.send-msg-bar input:not(:placeholder-shown) ~ .btn-react {
+  display: none;
+}
+
+.send-msg-bar .btn {
+  background: #0664FF;
+  border: none;
+  border-radius: 20px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  margin-left: 10px;
+  box-shadow: 0px 3px 8px rgba(6, 100, 255, 0.5);
+  cursor: pointer;
+}
+
+.send-msg-bar .btn:hover,
+.send-msg-bar .btn:focus {
+  background: #2175FF;
+}
+.send-msg-bar .btn-react {
+  font-size: 20px;
+}
 
 #app {
   position: fixed;
@@ -319,7 +376,6 @@ body {
       .message-content {
         font-size: 13px;
         word-break: break-word;
-        font-family: "Segoe UI", "Helvetica Neue", Helvetica, "Lucida Grande", Arial;
       }
       //flex: 0 0 auto;
 
