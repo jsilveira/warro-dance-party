@@ -346,7 +346,7 @@ body {
 
 @media(max-width: @mobile-width) {
   .dancefloor {
-    grid-template-rows: min-content 40% 40% min-content;
+    grid-template-rows: min-content auto 45% min-content;
     grid-template-columns: 100%;
 
     .reaction {
@@ -377,6 +377,8 @@ body {
       grid-column-end: 2;
       grid-row-start: 2;
       grid-row-end: 3;
+
+      zoom: 0.5;
     }
 
     .online-users {
@@ -386,22 +388,15 @@ body {
       grid-row-end: 3;
       align-self: end;
       padding: 0 5px;
-      zoom: 0.7;
       overflow: visible;
-      //z-index: -1;
 
-      .avatar {
-        //zoom: 0.8;
-      }
-
-      .many-users .avatar{
-        //zoom: 0.5;
-      }
+      zoom: 0.5;
     }
 
     audio {
       zoom: 1.7;
       width: 160px;
+      margin: 2px;
     }
 
     .send-msg-bar {
@@ -410,7 +405,7 @@ body {
       grid-row-start: 4;
       grid-row-end: 5;
 
-      padding: 0 !important;
+      padding: 0.25rem !important;
     }
 
     .autocomplete {
