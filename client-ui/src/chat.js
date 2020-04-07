@@ -158,6 +158,7 @@ class Chat extends Component {
       </div>
 
       <div className="la-w">
+        <div className={'w clone'}></div>
         <div className={'w'}></div>
       </div>
 
@@ -210,14 +211,14 @@ class Chat extends Component {
       const timeFromLastMsg = lastMessage ? moment(msg.createdAt).diff(lastMessage.createdAt) : 1000000;
 
       if (lastUserId === userId) {
-        msgBlock = this.renderMessage(msg, true, timeFromLastMsg < 1000*60)
+        msgBlock = this.renderMessage(msg, true, timeFromLastMsg < 1000*60*2)
       } else {
         msgBlock = this.renderMessage(msg)
       }
 
 
       if(lastMessage && msgBlock) {
-        if(timeFromLastMsg > 1000*60*5) {
+        if(timeFromLastMsg > 1000*60*15) {
           res.push(<div
             className={'text-center text-time small mt-2 mb-1'}>after {moment(msg.createdAt).from(moment(lastMessage.createdAt), 'm')}</div>)
         }
@@ -231,7 +232,7 @@ class Chat extends Component {
 
     if(lastMessage) {
       const timeFromLastMsg = moment(new Date()).diff(lastMessage.createdAt);
-      if(timeFromLastMsg > 1000*60*5) {
+      if(timeFromLastMsg > 1000*60*15) {
         res.push(<div className={'text-center text-time small mt-2'}>Last message {moment(lastMessage.createdAt).fromNow()}</div>)
       }
     }
@@ -244,21 +245,22 @@ class Chat extends Component {
 
   renderMessage(message, sameUser = false, skipTime = false) {
     if (message.text.length > 2) {
-      return <div key={message.id} className={"message d-flex flex-row "+(sameUser ? 'message-continue pt-0 pl-1 pr-1' : 'p-1')}>
+      return <div key={message.id} className={"message d-flex flex-row "+(sameUser ? 'message-continue pt-0 pr-1' : 'p-0')}>
         <div className={'text-center mr-2 date-bar'}>
           {sameUser ? null : <Avatar user={message.user}/>}
 
-          <div className="sent-date small">
+          <div className="sent-date">
             {skipTime ? null : moment(message.createdAt).format('hh:mm')}
           </div>
         </div>
-
+        <div>
         <div className="message-wrapper">
           {sameUser ? null : <div className="message-header">
-            <span className="username">{name(message.user)}</span>
+            <span className="username" style={{color: `${Avatar.getUserColor(message.user.id)}`}}>{name(message.user)}</span>
           </div>}
 
           <div className="message-content font-300">{message.text}</div>
+        </div>
         </div>
       </div>;
     } else {

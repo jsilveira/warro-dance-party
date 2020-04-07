@@ -44,24 +44,25 @@ export class Avatar extends Component {
     };
   }
 
-  render() {
-    let {user, positionInCircle} = this.props;
-    let {email, id} = user;
-
-    let words = (email || "").split("@")[0].trim().split(/[^\w]/);
-    let initials = words[0].slice(0, 2)
-    // if (words.length > 1) {
-    //   initials = words[0].slice(0, 2) + ' ' + words[1].slice(0, 2)
-    // }
+  static getUserColor(id) {
     let [h, s, l] = [
       Number.parseInt(id.slice(0, 2), 16) / 256 * 365,
       Number.parseInt(id.slice(2, 4), 16) / 256 * 100,
       Number.parseInt(id.slice(4, 6), 16) / 256 * 100
     ];
 
-    const colA = `hsl(${h},${s / 2 * 1 + 10}%,${l / 3 + 50}%)`;
-    const colB = `hsl(${h},${s / 2 * 1+ 35}%,${l / 3 + 20}%)`;
-    // const colB = colA;
+    const colA = `hsl(${h},${s / 2 * 1 + 30}%,${l / 4 + 55}%)`;
+    // const colB = `hsl(${h},${s / 2 * 1+ 35}%,${l / 3 + 20}%)`;
+    return colA;
+  }
+
+  render() {
+    let {user, positionInCircle} = this.props;
+    let {email, id} = user;
+
+    let initials = (email || "").slice(0, 2)
+
+    const colA = Avatar.getUserColor(user.id);
 
     const styleBgd = {
       // background: `linear-gradient(${s}deg, ${colA} 20%, ${colB} 80%)`

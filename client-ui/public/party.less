@@ -1,25 +1,21 @@
 body {
   font-family: Roboto, Roboto, Arial, Helvetica, sans-serif;
+}
 
-  //background: url(https://iili.io/JCH1m7.jpg) no-repeat center center fixed;
-  //background-size: cover;
-  > div {
-    background: #fff;
+html, body, body > div {
+  background: black;
   background:linear-gradient(415deg, #242440 10%, #0c0c19 100%);
-  }
 }
 
 @mobile-width: 700px;
 //@bgChat: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 30%);
 @bgChat: rgba(0,0,0,0.0);
 
-.message.d-flex.flex-row.p-1 {}
-
 .message-wrapper {
     display: inline-block;
-    background: rgba(114, 114, 227, 0.1);
+    background: #9a9abc33;
     border-radius: 20px;
-    padding: .5em 1em .75em 1em;
+    padding: .5em 1em .5em 1em;
     line-height: 1em;
 }
 
@@ -310,10 +306,20 @@ body {
     width: 240px;
     overflow: auto;
 
-    //background: red;
     //mask:url(../public/btn-pause.png);
+    //background: url(../public/doblevreal.svg) no-repeat;
+    //background-position: center center;
+
     background: url(../public/doblevreal.svg) no-repeat;
     background-position: center center;
+
+    &.clone {
+      background: white;
+      animation: wave 1s infinite ease-in-out forwards;
+      animation-delay: 0.7s;
+      background: url(../public/doblevreal.svg) no-repeat;
+      background-position: center center;
+    }
   }
 
   .autocomplete {
@@ -356,6 +362,8 @@ body {
 
     .date-bar {
       min-width: 29px;
+      margin-top: 0.5em;
+      margin-bottom: -0.5em;
     }
 
     .avatar {
@@ -364,18 +372,26 @@ body {
 
     .message {
       border-radius: 5px;
-      background: rgba(255, 255, 255, 0.1);
+      //background: rgba(255, 255, 255, 0.1);
       //background: rgba(49, 49, 49, 0.5);
       //border-bottom: solid 1px rgba(0,0,0,0.2);
       margin-top: 0.5rem;
 
       &.message-continue {
         margin-top: 3px;
+
+        .date-bar {
+          margin-top: 0.4em;
+        }
       }
 
       .message-content {
         font-size: 13px;
         word-break: break-word;
+      }
+
+      .avatar {
+        margin-left: 4px;
       }
       //flex: 0 0 auto;
 
@@ -389,7 +405,8 @@ body {
         margin: 0px;
       }
       .sent-date {
-        margin-top: 4px;
+        margin-top: 2px;
+        font-size: 10px;
         color: #969696;
       }
     }
@@ -477,20 +494,45 @@ body {
   }
 }
 
+@keyframes wave {
+  0% {
+    transform: scale(1,1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.5,1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+
 @keyframes zoom {
   0% {
     transform: scale(0,0);
     opacity: 0;
   }
   33% {
-    transform: scale(1,1);
+    transform: scale(0.66,0.66);
     opacity: 1;
   }
   80% {
     opacity: 1;
   }
   100% {
-    transform: scale(3,3);
+    transform: scale(2,2);
     opacity: 0;
   }
 }
