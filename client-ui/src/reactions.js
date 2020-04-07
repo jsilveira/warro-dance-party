@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import client from './feathers';
 import _ from 'lodash';
+import {Avatar} from "./avatar";
 
 export default class Reactions extends Component {
   constructor(props) {
@@ -16,18 +17,22 @@ export default class Reactions extends Component {
 
   componentDidMount() {
     client.service('messages').on('created', this.handleMsg);
-    this.addTextReaction("hola 👋")
   }
 
-  addTextReaction(text) {
+  addTextReaction(text, userId) {
     const extraClasses = [];
 
-    if(text.length <= 2) {
+    let isEmojiOrLetter = text.length <= 2;
+    if(isEmojiOrLetter) {
       extraClasses.push('emoji')
     }
 
     if(text === '🤜') {
       text = _.shuffle(["👊", "🤛", "🤜"])[0]
+    }
+
+    if(text.length > 20) {
+      return;
     }
 
     let reaction = {
@@ -39,6 +44,10 @@ export default class Reactions extends Component {
       extraClasses
     };
 
+    if(userId && !isEmojiOrLetter) {
+      reaction.style.background = Avatar.getUserColor(userId)
+    }
+
     setTimeout(() => {
       this.setState({reactions: _.without(this.state.reactions, reaction)})
     }, 5000);
@@ -48,7 +57,7 @@ export default class Reactions extends Component {
 
   handleMsg({text, userId}) {
     // if (true || text === "piña") {
-      this.addTextReaction(text)
+      this.addTextReaction(text, userId)
     // }
   }
 
