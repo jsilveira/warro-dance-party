@@ -7,16 +7,17 @@ html, body, body > div {
   background:linear-gradient(415deg, #242440 10%, #0c0c19 100%);
 }
 
-@mobile-width: 700px;
+@mobile-width: 768px;
 //@bgChat: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 30%);
 @bgChat: rgba(0,0,0,0.0);
 
 .message-wrapper {
     display: inline-block;
-    background: #9a9abc33;
+    background: #38436390;
     border-radius: 20px;
     padding: .5em 1em .5em 1em;
     line-height: 1em;
+    margin-right: 3em;
 }
 
 .send-msg-bar input {
@@ -128,7 +129,7 @@ html, body, body > div {
 
   .player-controls {
     grid-column-start: 1;
-    grid-column-end: 2;
+    grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 2;
 
@@ -281,7 +282,7 @@ html, body, body > div {
 
     background: @bgChat;
 
-    padding: 0 1rem 1rem 1rem !important;
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem !important;
   }
 
   .player {
@@ -330,8 +331,8 @@ html, body, body > div {
       color: white;
     }
     .listeners {
-      color: gray;
-      font-size: 0.9em;
+      color: #fff !important;
+      font-size: 1.25em;
     }
   }
 
@@ -391,11 +392,21 @@ html, body, body > div {
       box-shadow: inset 0 0 0 2px white;
     }
   }
+  
+  .action-header {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 450px;
+    height: 100px;
+    line-height: 100px;
+    padding-left: 2em;
+  }
 
   .chat {
     grid-column-start: 2;
     grid-column-end: 3;
-    grid-row-start: 1;
+    grid-row-start: 2;
     grid-row-end: 3;
     background: @bgChat;
 
@@ -407,15 +418,20 @@ html, body, body > div {
     color: white;
     //border-radius: 5px;
     font-size: 0.9em;
+    padding-bottom: 0 !important;
 
     .date-bar {
-      min-width: 29px;
-      margin-top: 0.5em;
-      margin-bottom: -0.5em;
+      min-width: 50px;
     }
 
     .avatar {
-      zoom: 0.5;
+      width: 40px;
+      height: 40px;
+
+      .round-avatar {
+        width: 40px;
+        height: 40px;
+      }
     }
 
     .message {
@@ -424,6 +440,7 @@ html, body, body > div {
       //background: rgba(49, 49, 49, 0.5);
       //border-bottom: solid 1px rgba(0,0,0,0.2);
       margin-top: 0.5rem;
+      position: relative;
 
       &.message-continue {
         margin-top: 3px;
@@ -436,6 +453,7 @@ html, body, body > div {
       .message-content {
         font-size: 13px;
         word-break: break-word;
+        color: #C1CAE1;
       }
 
       .avatar {
@@ -455,7 +473,11 @@ html, body, body > div {
       .sent-date {
         margin-top: 2px;
         font-size: 10px;
-        color: #969696;
+        color: #C1CAE140;
+        position: absolute;
+        top: 50%;
+        margin-top: -5px;
+        right: 0;
       }
     }
     .text-time {

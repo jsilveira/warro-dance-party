@@ -139,9 +139,6 @@ export default class Player extends Component {
         <div className={'player-info'}>
           <div className={'d-flex justify-content-between align-items-center mb-1'}>
             <span>{status}</span>
-            {
-              uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} listeners</span> : null
-            }
           </div>
 
           <div>{whatIsPlaying}</div>
@@ -160,6 +157,11 @@ export default class Player extends Component {
              onPause={() => this.onPause()}
              onVolumeChange={this.onVolumeChange()}
       />
+      <div className={'action-header'}>
+        {
+          uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} seres escuchando</span> : null
+        }
+      </div>
     </div>;
   }
 }
