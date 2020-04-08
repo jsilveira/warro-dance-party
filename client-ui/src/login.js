@@ -9,7 +9,6 @@ export default class Login extends Component {
 
     this.state = {};
 
-
     if(lastEmail) {
       this.state = {email: lastEmail}
     }
@@ -29,6 +28,8 @@ export default class Login extends Component {
   login() {
     const { email } = this.state;
 
+    document.body.classList.add('user-authenticated');
+
     return client.authenticate({
       strategy: 'local',
       email, password: '1234'
@@ -40,13 +41,15 @@ export default class Login extends Component {
 
     localStorage.setItem('email', email);
 
+    // document.body.classList.remove('user-unknown');
+
     return client.service('users')
       .create({ email, password: '1234' })
       .then(() => this.login());
   }
 
-
   render() {
+    document.body.classList.add('user-unknown');
     return <div className="login">
         <div className="text-center  bg-white shadow-sm rounded mt-5 p-2">
           <h3 className="mb-2">¿Quién sos 🐱?</h3>
