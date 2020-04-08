@@ -96,11 +96,10 @@ export default class Player extends Component {
 
         status.push(<div key={'live'} className={'pb-1'}>
             <div className={'h4 m-0'}>
-              {is_live ? <span className={'badge mr-2 badge-primary'}>Live</span> : null }
-
-              <strong className={'align-middle text-white'}>
+              <strong className={'align-middle text-white host-name'}>
                 {a}
               </strong>
+              {is_live ? <span className={'badge mr-2 badge-primary'}>Live</span> : null }
               {c.length ? <span className={'small ml-2 text-secondary'}>{c.join(' - ')}</span> : null}
             </div>
           </div>)

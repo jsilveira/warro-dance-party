@@ -31,6 +31,7 @@ html, body, body > div {
     color: #fff;
     box-shadow: none !important;
     outline: none;
+    -webkit-appearance: none;
 }
 
 .send-msg-bar input:focus {
@@ -214,18 +215,25 @@ html, body, body > div {
       line-height: 20px;
       font-weight: 300;
       color: white;
+      box-sizing: border-box;
       //text-shadow: 1px 1px 2px black, 0 0 5px black;
 
-      &:hover {
-        border: none !important;
-      }
       .gravatar {
-        height: 50px;
+        height: 48px;
+        width: 48px;
+        border-radius: 25px;
         //width: 100%;
         top: 0;
         left: 0;
         position: absolute;
         z-index: 5;
+      }
+      &:hover {
+        border: none !important;
+        .gravatar {
+          left: 1px;
+          top: 1px;
+        }
       }
     }
 
@@ -289,13 +297,37 @@ html, body, body > div {
     pointer-events: visible;
     overflow: auto;
     //box-shadow: 0 0 50px 50px white;
-    padding-top: 30px;
+    padding-top: 20px;
     padding-left: 20px;
     padding-right: 20px;
 
     .player-info {
-      margin-left: 90px;
-      flex-grow: 1;
+      padding-left: 90px;
+      width: 100%;
+
+      .pb-1 {
+        padding-bottom:0 !important;
+        padding-top:.25rem;
+      }
+
+      .badge {
+        font-size: 12px;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        position: relative;
+        top: -2px;
+        margin-left: 10px;
+      }
+
+      .text-secondary {
+        font-size: 1em;
+        color: #727D9F !important;
+        text-transform: uppercase;
+        white-space: nowrap;
+        overflow: hidden;
+        display: block;
+        text-overflow: ellipsis;
+      }
     }
 
     .player-btn {
@@ -325,10 +357,6 @@ html, body, body > div {
       text-transform: uppercase;
       font-size: 1em;
       color: #AAA;
-    }
-    .song-title {
-      font-size: 1.2em;
-      color: white;
     }
     .listeners {
       color: #fff !important;
@@ -431,6 +459,12 @@ html, body, body > div {
       .round-avatar {
         width: 40px;
         height: 40px;
+
+        .gravatar {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+        }
       }
     }
 
@@ -488,6 +522,7 @@ html, body, body > div {
 
 
 @media(max-width: @mobile-width) {
+  html, body, body > div { background: #0C0C19; }
   .dancefloor {
     grid-template-rows: min-content auto 40% min-content;
     grid-template-columns: 100%;
@@ -508,11 +543,7 @@ html, body, body > div {
     }
 
     .player-controls {
-      grid-column-start: 1;
-      grid-column-end: 2;
-      grid-row-start: 1;
-      grid-row-end: 2;
-      zoom: 0.7;
+      grid-column: auto;
 
       .player {
         padding-top: 10px;
@@ -521,7 +552,42 @@ html, body, body > div {
         .listeners {
           display: none;
         }
+        .player-btn {
+          width: 44px;
+          height: 44px;
+        }
       }
+      
+      .player-info {
+        padding-left: 60px;
+        .pb-1 { 
+          padding-top: 0 !important;
+          padding-bottom: 0 !important; 
+        }
+        .h4,
+        .host-name {
+          font-size: 16px;
+        }
+        .badge {
+          padding: 1px 6px;
+          font-size: 10px;
+          border-radius: 3px;
+          top: 0;
+        }
+        .song-title {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          display: block;
+          text-overflow: ellipsis;
+          font-size: 14px;
+          color: #727D9F;
+        }
+      }
+    }
+
+    .action-header {
+      display: none;
     }
 
     .la-w {
@@ -557,7 +623,7 @@ html, body, body > div {
       grid-row-start: 4;
       grid-row-end: 5;
 
-      padding: 0.25rem !important;
+      padding: 15px 15px 30px 15px !important;
     }
 
     .autocomplete {
@@ -569,6 +635,7 @@ html, body, body > div {
       grid-column-end: 2;
       grid-row-start: 3;
       grid-row-end: 4;
+      padding: 0 15px !important;
     }
   }
 }
