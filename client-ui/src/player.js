@@ -62,9 +62,9 @@ export default class Player extends Component {
   }
 
   onVolumeChange() {
-    if(this.audioRef.current) {
-      console.log("Volume ",this.audioRef.current.volume)
-    }
+    // if(this.audioRef.current) {
+    //   console.log("Volume ",this.audioRef.current.volume)
+    // }
   }
 
   playPause() {

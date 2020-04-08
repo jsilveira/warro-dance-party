@@ -224,7 +224,7 @@ class Chat extends Component {
 
       if(lastMessage && msgBlock) {
         if(timeFromLastMsg > 1000*60*15) {
-          res.push(<div
+          res.push(<div key={i}
             className={'text-center text-time small mt-2 mb-1'}>after {moment(msg.createdAt).from(moment(lastMessage.createdAt), 'm')}</div>)
         }
       }
@@ -238,7 +238,7 @@ class Chat extends Component {
     if(lastMessage) {
       const timeFromLastMsg = moment(new Date()).diff(lastMessage.createdAt);
       if(timeFromLastMsg > 1000*60*15) {
-        res.push(<div className={'text-center text-time small mt-2'}>Last message {moment(lastMessage.createdAt).fromNow()}</div>)
+        res.push(<div key={'last-msg'} className={'text-center text-time small mt-2'}>Last message {moment(lastMessage.createdAt).fromNow()}</div>)
       }
     }
 
