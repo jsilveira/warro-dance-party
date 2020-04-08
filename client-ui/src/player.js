@@ -115,7 +115,7 @@ export default class Player extends Component {
         let {title, artist, text} = now_playing.song;
         if(title && artist) {
           whatIsPlaying.push(<div key={'nowplay'} className={'text-white'}>
-            <span className={'song-title'}>{title} - {artist}</span>
+            <span className={'song-title'}><em>{title}</em> - {artist}</span>
           </div>)
         } else {
           whatIsPlaying.push(<div key={'nowplay'} className={'h5 text-secondary'}>
