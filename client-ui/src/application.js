@@ -9,6 +9,8 @@ class Application extends Component {
     super(props);
 
     this.state = {users: []};
+
+    this.chatRef = React.createRef();
   }
 
   componentDidMount() {
@@ -52,6 +54,13 @@ class Application extends Component {
 
         // Once both return, update the state
         this.setState({ login, messages, users, connected: true });
+
+        // Once messages are loaded, scroll to the last one
+        setTimeout(() => {
+          if (this.chatRef.current) {
+            this.chatRef.current.scrollToBottom();
+          }
+        }, 0)
       });
     });
 
@@ -92,7 +101,7 @@ class Application extends Component {
     }
     return <React.Fragment>
       {login}
-      <Chat messages={this.state.messages} users={this.state.users} connected={this.state.connected}/>
+      <Chat ref={this.chatRef} messages={this.state.messages} users={this.state.users} connected={this.state.connected}/>
     </React.Fragment>
   }
 }
