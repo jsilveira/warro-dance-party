@@ -96,11 +96,10 @@ export default class Player extends Component {
 
         status.push(<div key={'live'} className={'pb-1'}>
             <div className={'h4 m-0'}>
-              {is_live ? <span className={'badge mr-2 badge-primary'}>Live</span> : null }
-
-              <strong className={'align-middle text-white'}>
+              <strong className={'align-middle text-white host-name'}>
                 {a}
               </strong>
+              {is_live ? <span className={'badge mr-2 badge-primary'}>Live</span> : null }
               {c.length ? <span className={'small ml-2 text-secondary'}>{c.join(' - ')}</span> : null}
             </div>
           </div>)
@@ -116,8 +115,7 @@ export default class Player extends Component {
         let {title, artist, text} = now_playing.song;
         if(title && artist) {
           whatIsPlaying.push(<div key={'nowplay'} className={'text-white'}>
-            <span className={'song-title'}>{title}</span>
-            &nbsp;&nbsp;&nbsp;<span className={'artist'}>{artist}</span>
+            <span className={'song-title'}><em>{title}</em> - {artist}</span>
           </div>)
         } else {
           whatIsPlaying.push(<div key={'nowplay'} className={'h5 text-secondary'}>
@@ -139,9 +137,6 @@ export default class Player extends Component {
         <div className={'player-info'}>
           <div className={'d-flex justify-content-between align-items-center mb-1'}>
             <span>{status}</span>
-            {
-              uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} listeners</span> : null
-            }
           </div>
 
           <div>{whatIsPlaying}</div>
@@ -160,6 +155,11 @@ export default class Player extends Component {
              onPause={() => this.onPause()}
              onVolumeChange={this.onVolumeChange()}
       />
+      <div className={'action-header'}>
+        {
+          uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} seres escuchando</span> : null
+        }
+      </div>
     </div>;
   }
 }
