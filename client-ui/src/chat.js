@@ -15,7 +15,9 @@ class Chat extends Component {
     super(props)
     this.state = {
       message: ''
-    }
+    };
+
+    this.scrollToBottomWithDelay = () => setTimeout(() => this.scrollToBottom(), 5);
   }
 
   sendMessage(text) {
@@ -40,15 +42,13 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    this.scrollToBottom = this.scrollToBottom.bind(this);
-
-    client.service('messages').on('created', this.scrollToBottom);
+    client.service('messages').on('created', this.scrollToBottomWithDelay);
     this.scrollToBottom();
   }
 
   componentWillUnmount() {
     // Clean up listeners
-    client.service('messages').removeListener('created', this.scrollToBottom);
+    client.service('messages').removeListener('created', this.scrollToBottomWithDelay);
   }
 
   keyPressedHandler(keyEvent) {
