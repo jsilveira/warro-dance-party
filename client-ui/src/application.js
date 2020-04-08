@@ -3,6 +3,7 @@ import Login from './login';
 import Chat from './chat';
 import client from './feathers';
 import _ from 'lodash'
+import StarsBackground from "./StarsBackground";
 
 class Application extends Component {
   constructor(props) {
@@ -102,6 +103,7 @@ class Application extends Component {
     return <React.Fragment>
       {login}
       <Chat ref={this.chatRef} messages={this.state.messages} users={this.state.users} connected={this.state.connected}/>
+      <StarsBackground/>
     </React.Fragment>
   }
 }
