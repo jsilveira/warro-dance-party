@@ -14,6 +14,9 @@ export default class Player extends Component {
 
   componentDidMount() {
     this.fetchNowPlaying();
+    if(this.audioRef.current) {
+      this.audioRef.current.play();
+    }
   }
 
   async fetchNowPlaying() {
@@ -60,7 +63,17 @@ export default class Player extends Component {
 
   onVolumeChange() {
     if(this.audioRef.current) {
-      console.log(this.audioRef.current.volume)
+      console.log("Volume ",this.audioRef.current.volume)
+    }
+  }
+
+  playPause() {
+    if(this.audioRef.current) {
+      if(this.state.audio == 'paused') {
+        this.audioRef.current.play();
+      } else {
+        this.audioRef.current.pause();
+      }
     }
   }
 
@@ -69,28 +82,34 @@ export default class Player extends Component {
 
     let status = "Looking for our host...";
     let whatIsPlaying = "Finding out what's playing...";
+    let uniqueListeners = 0;
 
     if(metadata) {
       status = [];
       whatIsPlaying = [];
-      let {live, listeners, now_playing, song_history} = metadata;
+      let {live, listeners, now_playing, song_history, playing_next} = metadata;
 
       let {streamer_name, is_live} = live;
-
-      if(is_live) {
+      streamer_name = streamer_name || ((playing_next || {}).playlist) || 'Auto DJ'
+      if(streamer_name) {
         let [a, ... c] = streamer_name.split(' - ');
 
         status.push(<div key={'live'} className={'pb-1'}>
-            <div className={'h4'}>
-              <span className={'badge badge-primary'}>Live</span>
-              <span className={'align-middle ml-2 text-white'}>
+            <div className={'h4 m-0'}>
+              {is_live ? <span className={'badge mr-2 badge-primary'}>Live</span> : null }
+
+              <strong className={'align-middle text-white'}>
                 {a}
-              </span>
+              </strong>
               {c.length ? <span className={'small ml-2 text-secondary'}>{c.join(' - ')}</span> : null}
             </div>
           </div>)
       } else if(streamer_name) {
         status.push(streamer_name)
+      }
+
+      if(listeners) {
+        uniqueListeners = listeners.unique;
       }
 
       if(now_playing && now_playing.song) {
@@ -111,44 +130,35 @@ export default class Player extends Component {
     }
 
     const url = "https://warro.online/radio/8000/radio.mp3?1586033987";
+    // const url = "https://warro.online/radio/8010/radio.mp3?1586302213";
 
     return <div className={"player text-left state-"+audio}>
-      <div>{status}</div>
+      <div className={'d-flex'}>
+        <div className={'player-btn'} onClick={this.playPause.bind(this)}></div>
 
-      <div>{whatIsPlaying}</div>
-      {/*<div className={'h5'}>*/}
-      {/*  <span className={`badge badge-${audio == 'playing' ? 'success' : 'warning'}`}>{audio}</span>*/}
-      {/*</div>*/}
-      {/*<iframe src="silence.mp3" id="audio" style={{display: 'none'}}/>*/}
+        <div className={'player-info'}>
+          <div className={'d-flex justify-content-between align-items-center mb-1'}>
+            <span>{status}</span>
+            {
+              uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} listeners</span> : null
+            }
+          </div>
 
-      <audio         ref={this.audioRef} controls src={url}
+          <div>{whatIsPlaying}</div>
+        </div>
+      </div>
 
+      <audio ref={this.audioRef} controls src={url}
 
-                     onError={() => this.onAudioError()}
-                     onAbort={() => this.onAudioError()}
+             onError={() => this.onAudioError()}
+             onAbort={() => this.onAudioError()}
 
-                     onWaiting={this.logState.bind(this, 'onwaiting')}
-                     onPlaying={() => this.onAudioPlaying()}
+             onWaiting={() => this.onAudioWait()}
+             onPlaying={() => this.onAudioPlaying()}
 
-                     onPlay={() => this.onPlay()}
-                     onPause={() => this.onPause()}
-                     onVolumeChange={this.onVolumeChange()}
-
-        // onCanPlay={this.logState.bind(this, 'oncanplay')}
-        // onCanPlayThrough={this.logState.bind(this, 'oncanplaythrough')}
-        // onDurationChange={this.logState.bind(this, 'ondurationchange')}
-        // onEmptied={this.logState.bind(this, 'onemptied')}
-        // onEnded={this.logState.bind(this, 'onended')}
-        // onLoadedData={this.logState.bind(this, 'onloadeddata')}
-        // onLoadedMetadata={this.logState.bind(this, 'onloadedmetadata')}
-        // onLoadStart={this.logState.bind(this, 'onloadstart')}
-        // onProgress={this.logState.bind(this, 'onprogress')}
-        // onRateChange={this.logState.bind(this, 'onratechange')}
-        // onSeeked={this.logState.bind(this, 'onseeked')}
-        // onSeeking={this.logState.bind(this, 'onseeking')}
-        // onSuspend={this.logState.bind(this, 'onsuspend')}
-        // onTimeUpdate={this.logState.bind(this, 'ontimeupdate')}
-
+             onPlay={() => this.onPlay()}
+             onPause={() => this.onPause()}
+             onVolumeChange={this.onVolumeChange()}
       />
     </div>;
   }

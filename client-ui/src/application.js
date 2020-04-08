@@ -16,16 +16,16 @@ class Application extends Component {
     const room = client.service('room');
 
     // Try to authenticate with the JWT stored in localStorage
-    client.authenticate().catch(() => this.setState({ login: null }));
+    client.authenticate().catch(() => this.setState({ login: null, connected: true }));
 
     window.io.on("reconnecting", (delay, attempt) => {
       console.log("Disconnected ... trying to reconnect.", delay, attempt);
-      this.setState({login: undefined})
+      this.setState({login: undefined, connected: false})
     });
 
     window.io.on("reconnect", () => {
       console.log("reconnect")
-      client.authenticate().catch(() => this.setState({ login: null }));
+      client.authenticate().catch(() => this.setState({ login: null, connected: true }));
     });
 
     window.io.on("reconnect_failed", () => {
@@ -51,7 +51,7 @@ class Application extends Component {
         const users = roomUsers;
 
         // Once both return, update the state
-        this.setState({ login, messages, users });
+        this.setState({ login, messages, users, connected: true });
       });
     });
 
@@ -83,15 +83,17 @@ class Application extends Component {
   }
 
   render() {
-    if(this.state.login === undefined) {
-      return <div className="container text-center">
-        <h1>Loading...</h1>
-      </div>;
-    } else if(this.state.login) {
-      return <Chat messages={this.state.messages} users={this.state.users} />
-    }
+    let login = null;
 
-    return <Login />;
+    if (this.state.connected && !this.state.login) {
+      login = <div className="container text-center">
+        <Login/>
+      </div>;
+    }
+    return <React.Fragment>
+      {login}
+      <Chat messages={this.state.messages} users={this.state.users} connected={this.state.connected}/>
+    </React.Fragment>
   }
 }
 

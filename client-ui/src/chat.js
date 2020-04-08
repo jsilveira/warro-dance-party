@@ -157,10 +157,15 @@ class Chat extends Component {
         <Player/>
       </div>
 
-      <div className="la-w">
-        <div className={'w clone'}></div>
-        <div className={'w'}></div>
-      </div>
+      {this.props.connected ?
+        <div className="la-w">
+          <div className={'w clone'}></div>
+          <div className={'w'}></div>
+        </div>
+        : <div className="la-w">
+          <div className={'connecting text-white'}>Conectando...</div>
+        </div>
+      }
 
 
       <div className={"online-users "+(users.length > 20 ? 'many-users' : '')}>

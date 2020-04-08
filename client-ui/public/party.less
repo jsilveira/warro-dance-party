@@ -3,7 +3,7 @@ body {
 }
 
 html, body, body > div {
-  background: black;
+  background: #0c0c19;
   background:linear-gradient(415deg, #242440 10%, #0c0c19 100%);
 }
 
@@ -78,6 +78,12 @@ html, body, body > div {
 
 .login {
   pointer-events: visible;
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  width: 300px;
+  margin-left: -150px;
+  z-index: 1;
 }
 
 .dancefloor {
@@ -282,8 +288,37 @@ html, body, body > div {
     pointer-events: visible;
     overflow: auto;
     //box-shadow: 0 0 50px 50px white;
-    padding-top: 15px;
+    padding-top: 30px;
     padding-left: 20px;
+    padding-right: 20px;
+
+    .player-info {
+      margin-left: 90px;
+      flex-grow: 1;
+    }
+
+    .player-btn {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      cursor: pointer;
+
+      background: url('../public/btn-loading.png') center center no-repeat;
+      background-size: contain;
+
+      filter: brightness(1.5);
+    }
+
+    &.state-playing {
+      .player-btn {
+        background-image: url('../public/btn-pause.png');
+      }
+    }
+    &.state-paused {
+      .player-btn {
+        background-image: url('../public/btn-play.png');
+      }
+    }
 
     .artist {
       text-transform: uppercase;
@@ -293,6 +328,10 @@ html, body, body > div {
     .song-title {
       font-size: 1.2em;
       color: white;
+    }
+    .listeners {
+      color: gray;
+      font-size: 0.9em;
     }
   }
 
@@ -320,6 +359,12 @@ html, body, body > div {
       background: url(../public/doblevreal.svg) no-repeat;
       background-position: center center;
     }
+  }
+
+  .connecting {
+    position: absolute;
+    left: 50%;
+    top: 50%;
   }
 
   .autocomplete {
@@ -419,7 +464,7 @@ html, body, body > div {
 
 @media(max-width: @mobile-width) {
   .dancefloor {
-    grid-template-rows: min-content auto 45% min-content;
+    grid-template-rows: min-content auto 40% min-content;
     grid-template-columns: 100%;
 
     .reaction {
@@ -443,6 +488,15 @@ html, body, body > div {
       grid-row-start: 1;
       grid-row-end: 2;
       zoom: 0.7;
+
+      .player {
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        .listeners {
+          display: none;
+        }
+      }
     }
 
     .la-w {
@@ -461,9 +515,9 @@ html, body, body > div {
       grid-row-end: 3;
       align-self: end;
       padding: 0 5px;
-      overflow: visible;
 
       zoom: 0.5;
+      overflow: hidden;
     }
 
     audio {
@@ -567,18 +621,19 @@ audio {
   margin-top: 10px;
   margin-bottom: 10px;
   zoom: 1.3;
-
+  display: none;
 
   &:focus {
     outline: none;
   }
   &::-webkit-media-controls {
+
   }
   &::-webkit-media-controls-panel {
-    //background: #CCC;
+    background: #1d1d4a;
 
     //margin: 5px;
-    border-radius: 0;
+    //border-radius: 0;
     //display: none;
   }
   &::-webkit-media-controls-mute-button {
@@ -586,6 +641,9 @@ audio {
   }
   &::-webkit-media-controls-play-button {
     color: white;
+    background-color: white;
+    border-radius: 50%;
+    height: 100%;
   }
   &::-webkit-media-controls-timeline-container {
   }
@@ -610,12 +668,34 @@ audio {
 
   }
   &::-webkit-media-controls-volume-slider {
-
+    background: yellow;
   }
 }
 
-.player.state-playing audio::-webkit-media-controls-panel { background: white; }
-.player.state-paused audio::-webkit-media-controls-panel { border: #ddd; }
+::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar
+{
+  width: 12px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  -webkit-box-shadow: inset -2px 0px 4px rgba(0,0,0,.4);
+  background-color: #44445f;
+  border-right: black 2px;
+}
+
+
+//.player.state-playing audio::-webkit-media-controls-panel { background: white; }
+//.player.state-paused audio::-webkit-media-controls-panel { border: #ddd; }
 
 .star {
   position: absolute;
