@@ -7,8 +7,19 @@ export default class VolumeSlider extends React.PureComponent {
 
     this.barRef = React.createRef();
 
-    this.state = {
-      volume: props.htmlAudio ? props.htmlAudio.volume : 1
+    let lastVolume = localStorage.getItem('player-volume');
+
+    if(lastVolume) {
+      let vol = parseFloat(lastVolume);
+      this.state = {volume: vol}
+    } else {
+      this.state = {volume: props.htmlAudio ? props.htmlAudio.volume : 1}
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.htmlAudio && this.props.htmlAudio && this.props.htmlAudio.volume !== this.state.volume) {
+      this.props.htmlAudio.volume = this.state.volume;
     }
   }
 
@@ -37,7 +48,8 @@ export default class VolumeSlider extends React.PureComponent {
   setAudioVol(vol) {
     if(this.props.htmlAudio) {
       this.props.htmlAudio.volume = vol;
-      console.log("Volume", vol)
+      // Set for future pageviews
+      localStorage.setItem('player-volume', vol);
     }
   }
 
