@@ -33,6 +33,10 @@ app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 app.use('/', express.static(app.get('public')+'/ui/'));
 app.use('/', express.static(app.get('public')));
 
+app.get('/agenda', (req, res) => {
+  res.redirect(307, 'https://teamup.com/ksvxpbpcuwfacy64tt');
+});
+
 app.get('/', (req, res) => {
   res.sendfile(app.get('public') + '/ui/index.html');
 });

@@ -164,7 +164,7 @@ export default class Player extends Component {
         {
           uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} seres escuchando</span> : null
         }
-        <a href="https://teamup.com/ksvxpbpcuwfacy64tt" target={'_blank'} className={'btn btn-secondary'}>Ver agenda</a>
+        <a href="/agenda" target={'_blank'} className={'btn btn-secondary'}>Ver agenda</a>
       </div>
     </div>;
   }
