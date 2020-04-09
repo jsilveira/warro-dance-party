@@ -95,7 +95,7 @@ export default class Player extends Component {
       if(streamer_name) {
         let [a, ... c] = streamer_name.split(' - ');
 
-        status.push(<div key={'live'} className={'pb-1'}>
+        status.push(<div key={'live'} className={''}>
             <div className={'h4 m-0'}>
               <strong className={'align-middle text-white host-name'}>
                 {a}
