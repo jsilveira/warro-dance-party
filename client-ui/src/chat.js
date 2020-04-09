@@ -112,9 +112,8 @@ class Chat extends Component {
   renderSuggestions() {
     const {autocomplete, nextEmoji} = this.state;
     if (autocomplete) {
-      return <div className={'autocomplete bg-dark rounded p-1 shadow-sm ml-4 mr-4 mb-2'}>
-        Press <span className={'key'}>TAB</span> for &nbsp;
-
+      return <div className={'autocomplete rounded p-2 shadow-sm mb-2 mr-4'}>
+        <div className={'small mb-2'}>Press <span className={'key'}>TAB</span> for:</div>
         {
           _.map(autocomplete.slice(0, 15), (emojiName,i) => <span
             className={'emoji p-1 text-lg '+(nextEmoji == (i+1) ? 'bg-primary rounded' : '')}
@@ -180,7 +179,7 @@ class Chat extends Component {
       </div>
 
       <div className="send-msg-bar">
-        { this.renderSuggestions() }
+          { this.renderSuggestions() }
         <div className="rounded d-flex flex-row flex-space-between" id="send-message">
           <input autoFocus={true}
                  className={"d-flex flex1-1 form-control shadow-sm"}
