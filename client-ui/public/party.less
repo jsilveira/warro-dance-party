@@ -1,5 +1,5 @@
 body {
-  font-family: Roboto, Roboto, Arial, Helvetica, sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 html, body, body > div {
@@ -20,7 +20,8 @@ html, body, body > div {
     margin-right: 3em;
 }
 
-.send-msg-bar input {
+.send-msg-bar input,
+.login input {
     border: 3px solid #384363;
     background: none;
     font-size: .875rem;
@@ -34,10 +35,12 @@ html, body, body > div {
     -webkit-appearance: none;
 }
 
-.send-msg-bar input:focus {
+.send-msg-bar input:focus,
+.login input:focus {
   border-color: #fff;
 }
-.send-msg-bar input::placeholder {
+.send-msg-bar input::placeholder,
+.login input::placeholder {
   color: #91A0CC;
 }
 .send-msg-bar input:placeholder-shown ~ .btn-send {
@@ -47,7 +50,8 @@ html, body, body > div {
   display: none;
 }
 
-.send-msg-bar .btn {
+.send-msg-bar .btn,
+.login .btn {
   background: #0664FF;
   border: none;
   border-radius: 20px;
@@ -60,11 +64,14 @@ html, body, body > div {
   cursor: pointer;
 }
 
-.send-msg-bar .btn:hover,
-.send-msg-bar .btn:focus {
+.send-msg-bar .btn:hove,
+.login .btn:hover,
+.send-msg-bar .btn:focus,
+.login .btn:focus {
   background: #2175FF;
 }
-.send-msg-bar .btn-react {
+.send-msg-bar .btn-react,
+.login .btn-react {
   font-size: 20px;
 }
 
@@ -337,7 +344,7 @@ html, body, body > div {
         text-overflow: ellipsis;
       }
     }
-
+    
     .player-btn {
       position: absolute;
       width: 70px;
@@ -348,6 +355,7 @@ html, body, body > div {
       background-size: contain;
 
       filter: brightness(1.5);
+      span { display: none; }
     }
 
     &.state-playing {
@@ -437,7 +445,22 @@ html, body, body > div {
     width: 450px;
     height: 100px;
     line-height: 100px;
-    padding-left: 2em;
+    padding: 0 2em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .btn-secondary {
+      font-size: 13px;
+      font-weight: bold;
+      background: none;
+      border: 3px solid #2175FF;
+      color: #fff;
+      border-radius: 20px;
+      padding: .5em 1.5em;
+      text-transform: uppercase;
+    }
   }
 
   .chat {
@@ -529,6 +552,95 @@ html, body, body > div {
   }
 }
 
+.user-unknown:not(.user-authenticated) {
+  .dancefloor {
+    .la-w {
+      grid-column-end: 3;
+      grid-row-start: 1;
+      .w {
+        margin-top: -240px;
+      }
+    }
+    .action-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+    }
+    .player > .d-flex {
+      width: auto;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%);
+      position: fixed;
+      text-align: center;
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+    .player-controls {
+      .player-info {
+        text-align: center;
+        padding-left: 0;
+        .d-flex { justify-content: center!important; }
+      }
+    }
+    .player {
+      .player-btn {
+        width: auto;
+        height: auto;
+        background-image: none;
+        background-color: #2175FF;
+        color: #fff;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 25px;
+        padding: .75em 2em;
+        filter: none;
+        position: relative;
+        text-align: center;
+        display: inline-block;
+        margin-top: 30px;
+        box-sizing: border-box;
+        border: 3px solid transparent;
+      }
+      &.state-paused {
+        .player-btn {
+          .btn-play { display: block; }
+        }
+      }
+      &.state-playing {
+        .player-btn {
+          background: none;
+          border: 3px solid #2175FF;
+          .btn-pause {display: block;}
+        }
+      }
+    }
+    .send-msg-bar { display: none; }
+  }
+  .login {
+    top: auto;
+    bottom: 50px;
+    small {
+      color: #91A0CC;
+      text-align: left;
+      padding-left: 15px;
+      display: block;
+      padding-bottom: 5px;
+      font-size: 12px;
+    }
+    .field-wrap {
+      display: flex;
+      .btn { 
+        margin-top: 0 !important; 
+        padding: 0 !important;
+        line-height: 52px;
+      }
+    }
+  }
+  .chat .text-time { display: none; }
+}
+
 
 @media(max-width: @mobile-width) {
   html, body, body > div { background: #0C0C19; }
@@ -548,6 +660,21 @@ html, body, body > div {
         color: white;
         animation: zoomEmoji 0.5s 1 linear forwards;
         text-shadow: 0px 0px 10px #35cd96, 0px 0px 3px #35cd96;
+      }
+    }
+
+    .online-users .avatar {
+      .initials {
+        display: none;
+      }
+      .round-avatar {
+        width: 35px !important;
+        height: 35px;
+
+        .gravatar {
+          width: 33px;
+          height: 33px;
+        }
       }
     }
 
@@ -618,6 +745,7 @@ html, body, body > div {
 
       zoom: 0.5;
       overflow: hidden;
+      left: 10px;
     }
 
     audio {
@@ -647,9 +775,81 @@ html, body, body > div {
       padding: 0 15px !important;
     }
   }
-  .user-unknown .dancefloor {
-    .online-users {
+  .user-unknown:not(.user-authenticated) {
+    .container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      margin-left: 0;
+      padding: 15px 15px 0 15px;
 
+      .login {
+        position: relative;
+        top: auto;
+        margin: 0;
+        left: auto;
+        width: 100%;
+        padding-bottom: 30px;
+      }
+
+      .mt-2 { margin-top: 0 !important; }
+      
+      .field-wrap {
+        display: flex;
+        flex-direction: row;
+      }
+    }
+    .dancefloor {
+      .action-header {
+        display: block;
+        width: auto;
+        top: 0;
+        position: fixed;
+        width: 100%;
+        text-align: center;
+        line-height: 50px;
+        height: 50px;
+        opacity: .5;
+      }
+      .player-controls {
+        position: absolute;
+        top: 43vh;
+        width: 100%;
+        left: 0;
+        .player {
+          .listeners {
+            display: block;
+          }          
+          .btn-secondary { display: none; }
+          .d-flex { 
+            flex-direction: column-reverse;
+            text-align: center;
+            align-items: center;
+          }
+
+        }
+        .player-info {
+          padding-left: 0px;
+          text-align: center;
+          .host-name {
+            font-size: 20px;
+            font-weight: 600;
+          }
+          .song-title {
+            white-space: normal;
+            text-overflow: none;
+            display: block;
+            padding: 0 2em;
+          }
+
+        }
+      }
+      .send-msg-bar {
+        display: none;
+      }
+      .chat { display: none; }
+      .online-users { display: none; }
     }
   }
 }

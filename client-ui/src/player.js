@@ -132,7 +132,7 @@ export default class Player extends Component {
 
     return <div className={"player text-left state-"+audio}>
       <div className={'d-flex'}>
-        <div className={'player-btn'} onClick={this.playPause.bind(this)}></div>
+        <div className={'player-btn'} onClick={this.playPause.bind(this)}><span className={'btn-play'}>Dale play</span><span className={'btn-pause'}>Pausar radio</span></div>
 
         <div className={'player-info'}>
           <div className={'d-flex justify-content-between align-items-center mb-1'}>
@@ -159,6 +159,7 @@ export default class Player extends Component {
         {
           uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} seres escuchando</span> : null
         }
+        <a href="#" className={'btn btn-secondary'}>Ver agenda</a>
       </div>
     </div>;
   }
