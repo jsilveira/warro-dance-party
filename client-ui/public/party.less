@@ -110,7 +110,7 @@ html, body, body > div {
     grid-column-end: 3;
     grid-row-start: 1;
     grid-row-end: 4;
-    position: relative;
+    position: absolute;
 
     .reaction {
       position: fixed;
@@ -324,10 +324,10 @@ html, body, body > div {
       }
 
       .song-title {
-        color: #727D9F;
+        color: #4d5773;
         em {
           font-style: normal;
-          color: #C1CAE1;
+          color: #727D9F;
         }
       }
 
@@ -338,16 +338,19 @@ html, body, body > div {
         position: relative;
         top: -2px;
         margin-left: 10px;
+        margin-right: 0 !important;
       }
 
       .text-secondary {
-        font-size: 1em;
-        color: #727D9F !important;
-        text-transform: uppercase;
+        font-size: .6em;
+        color: #C1CAE1 !important;
         white-space: nowrap;
         overflow: hidden;
         display: block;
         text-overflow: ellipsis;
+        text-transform: uppercase;
+        margin-left: 0 !important;
+        padding-top: 8px;
       }
     }
     
@@ -571,7 +574,7 @@ html, body, body > div {
       grid-column-end: 3;
       grid-row-start: 1;
       .w {
-        margin-top: -240px;
+        margin-top: -300px;
       }
     }
     .action-header {
@@ -583,7 +586,7 @@ html, body, body > div {
       width: auto;
       left: 50%;
       top: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateY(-30%);
       position: fixed;
       text-align: center;
       flex-direction: column-reverse;
@@ -698,6 +701,7 @@ html, body, body > div {
         padding-top: 10px;
         padding-left: 10px;
         padding-right: 10px;
+        overflow: hidden;
 
         .player-controls-and-info {
           margin-right: 0px;
@@ -714,6 +718,9 @@ html, body, body > div {
       .volume-slider {
         width: auto;
         height: auto;
+        position: absolute;
+        top: 13px;
+        right: 10px;
         .volume-bar-mouse-area {
           display: none;
         }
@@ -728,6 +735,7 @@ html, body, body > div {
         .h4,
         .host-name {
           font-size: 16px;
+          margin-top: -4px !important;
         }
         .badge {
           padding: 1px 6px;
@@ -735,14 +743,21 @@ html, body, body > div {
           border-radius: 3px;
           top: 0;
         }
+        .text-secondary {
+          font-size: 13px;
+          padding-top: 0;
+        }
+        .mb-1 { margin-bottom: 0 !important; }
         .song-title {
           display: block;
           white-space: nowrap;
           overflow: hidden;
           display: block;
           text-overflow: ellipsis;
-          font-size: 14px;
-          color: #727D9F;
+          font-size: 13px;
+          text-transform: uppercase;
+          line-height: 15px;
+          padding-right: 40px;
         }
       }
     }
@@ -758,6 +773,7 @@ html, body, body > div {
       grid-row-end: 3;
 
       zoom: 0.5;
+      .w { margin-top: -120px !important; }
     }
 
     .online-users {
@@ -849,6 +865,10 @@ html, body, body > div {
             text-align: center;
             align-items: center;
           }
+          > .d-flex {
+            padding: 0 2em;
+            width: 100%;
+          }
 
         }
         .player-info {
@@ -858,11 +878,15 @@ html, body, body > div {
             font-size: 20px;
             font-weight: 600;
           }
+          .text-secondary {
+            margin: 1em 0 !important;
+          }
           .song-title {
             white-space: normal;
             text-overflow: none;
             display: block;
-            padding: 0 2em;
+            color: #4d5773;
+            padding-right: 0;
           }
 
         }
