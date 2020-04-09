@@ -51,18 +51,13 @@ export default class Login extends Component {
   render() {
     document.body.classList.add('user-unknown');
     return <div className="login">
-        <div className="text-center  bg-white shadow-sm rounded mt-5 p-2">
-          <h3 className="mb-2">¿Quién sos 🐱?</h3>
-          <p>{this.state.error && this.state.error.message}</p>
-
-          <div>
-            <fieldset>
-              <input className="form-control" type="email" name="email" placeholder="email" onChange={ev => this.updateField('email', ev)} />
-            </fieldset>
-
-            <div className="btn btn-primary block signup mt-2" onClick={() => this.signup()}>
-              Enter the party
-            </div>
+        <div>
+          <small className="mb-2">¡Sumate al chat, somos un montón! {this.state.error && this.state.error.message}</small>
+          <div className={'field-wrap'}>
+            <input className="form-control" type="email" name="email" placeholder="Ingresá tu nombre para chatear" onChange={ev => this.updateField('email', ev)} />
+            <button className="btn btn-primary btn-send block signup mt-2" onClick={() => this.signup()}>
+              <i className={'material-icons'}>chevron_right</i>
+            </button>
           </div>
         </div>
     </div>;

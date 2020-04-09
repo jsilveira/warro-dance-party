@@ -96,7 +96,7 @@ class Application extends Component {
     let login = null;
 
     if (this.state.connected && !this.state.login) {
-      login = <div className="container text-center">
+      login = <div className="container">
         <Login/>
       </div>;
     }
