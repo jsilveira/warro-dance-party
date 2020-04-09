@@ -301,6 +301,10 @@ html, body, body > div {
     padding-left: 20px;
     padding-right: 20px;
 
+    .player-controls-and-info {
+      margin-right: 450px;
+    }
+
     .player-info {
       padding-left: 90px;
       width: 100%;
@@ -558,12 +562,24 @@ html, body, body > div {
         padding-top: 10px;
         padding-left: 10px;
         padding-right: 10px;
+
+        .player-controls-and-info {
+          margin-right: 0px;
+        }
         .listeners {
           display: none;
         }
         .player-btn {
           width: 44px;
           height: 44px;
+        }
+      }
+
+      .volume-slider {
+        width: auto;
+        height: auto;
+        .volume-bar-mouse-area {
+          display: none;
         }
       }
       
@@ -799,18 +815,5 @@ audio {
   border-right: black 2px;
 }
 
-
-//.player.state-playing audio::-webkit-media-controls-panel { background: white; }
-//.player.state-paused audio::-webkit-media-controls-panel { border: #ddd; }
-
-.stars-container {
-  opacity: 0.5;
-  .star {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    border-radius: 5px;
-    background-color: white;
-    z-index: -1;
-  }
-}
+@import "./StarsBackground";
+@import "./VolumeSlider";

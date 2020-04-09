@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {now} from "moment";
+import VolumeSlider from "./VolumeSlider";
 
 export default class Player extends Component {
   constructor(props) {
@@ -62,9 +63,9 @@ export default class Player extends Component {
   }
 
   onVolumeChange() {
-    // if(this.audioRef.current) {
-    //   console.log("Volume ",this.audioRef.current.volume)
-    // }
+    if(this.audioRef.current) {
+      console.log("Volume ",this.audioRef.current.volume)
+    }
   }
 
   playPause() {
@@ -131,7 +132,7 @@ export default class Player extends Component {
     // const url = "https://warro.online/radio/8010/radio.mp3?1586302213";
 
     return <div className={"player text-left state-"+audio}>
-      <div className={'d-flex'}>
+      <div className={'d-flex player-controls-and-info'}>
         <div className={'player-btn'} onClick={this.playPause.bind(this)}></div>
 
         <div className={'player-info'}>
@@ -141,8 +142,11 @@ export default class Player extends Component {
 
           <div>{whatIsPlaying}</div>
         </div>
+
+        <VolumeSlider htmlAudio={this.audioRef.current}/>
       </div>
 
+      {/*This component is hidden*/}
       <audio ref={this.audioRef} controls src={url}
 
              onError={() => this.onAudioError()}
@@ -155,6 +159,7 @@ export default class Player extends Component {
              onPause={() => this.onPause()}
              onVolumeChange={this.onVolumeChange()}
       />
+
       <div className={'action-header'}>
         {
           uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} seres escuchando</span> : null
