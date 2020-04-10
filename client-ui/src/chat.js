@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import React, {Component} from 'react';
+import Linkify from 'react-linkify';
 
 import client from './feathers';
 import Reactions from './reactions';
@@ -9,6 +10,12 @@ import emojis from './emojis'
 import {Avatar} from "./avatar";
 
 const name = (user) => user.email.split('@')[0]
+
+const chatLinksComponent = (href, text, key) => (
+  <a href={href} key={key} target="_blank">
+    {text}
+  </a>
+);
 
 class Chat extends Component {
   constructor(props) {
@@ -250,6 +257,7 @@ class Chat extends Component {
   renderMessage(message, sameUser = false, skipTime = false) {
     if (message.text.length > 2) {
       return <div key={message.id} className={"message d-flex flex-row "+(sameUser ? 'message-continue pt-0 pr-1' : 'p-0')}>
+
         <div className={'text-center mr-2 date-bar'}>
           {sameUser ? null : <Avatar user={message.user}/>}
 
@@ -257,14 +265,18 @@ class Chat extends Component {
             {skipTime ? null : moment(message.createdAt).format('hh:mm')}
           </div>
         </div>
-        <div>
-        <div className="message-wrapper">
-          {sameUser ? null : <div className="message-header">
-            <span className="username" style={{color: `${Avatar.getUserColor(message.user.id)}`}}>{name(message.user)}</span>
-          </div>}
 
-          <div className="message-content font-300">{message.text}</div>
-        </div>
+        <div>
+          <div className="message-wrapper">
+            {sameUser ? null : <div className="message-header">
+              <span className="username" style={{color: `${Avatar.getUserColor(message.user.id)}`}}>{name(message.user)}</span>
+            </div>}
+
+            <div className="message-content font-300">
+              <Linkify componentDecorator={chatLinksComponent}>
+                {message.text}</Linkify>
+            </div>
+          </div>
         </div>
       </div>;
     } else {
