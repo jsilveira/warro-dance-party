@@ -132,7 +132,7 @@ export default class Player extends Component {
     // const url = "https://warro.online/radio/8010/radio.mp3?1586302213";
 
     return <div className={"player text-left state-"+audio}>
-      <div className={'d-flex'}>
+      <div className={'d-flex overflow-hidden'}>
         <div className={'player-btn'} onClick={this.playPause.bind(this)}><span className={'btn-play'}>Dale play</span><span className={'btn-pause'}>Pausar radio</span></div>
 
         <div className={'player-info'}>
