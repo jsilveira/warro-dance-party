@@ -8,6 +8,7 @@
     "moment": "^2.17.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-linkify": "^1.0.0-alpha",
     "socket.io-client": "^1.7.3"
   },
   "browserslist": [
