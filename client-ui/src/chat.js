@@ -4,10 +4,10 @@ import React, {Component} from 'react';
 import Linkify from 'react-linkify';
 
 import client from './feathers';
-import Reactions from './reactions';
 import Player from './player';
-import emojis from './emojis'
-import {Avatar} from "./avatar";
+import {emojis, isEmoji} from './emojis'
+import Avatar from "./avatar";
+import OnlineUsersWithReactions from "./OnlineUsersWithReactions";
 
 const name = (user) => user.email.split('@')[0]
 
@@ -16,6 +16,14 @@ const chatLinksComponent = (href, text, key) => (
     {text}
   </a>
 );
+
+const emojiPinia = "🤜";
+
+const findEmojis = (text) => {
+  let parts = text.split(/[\w ]+/);
+  return _.filter(parts, e => isEmoji(e));
+};
+
 
 class Chat extends Component {
   constructor(props) {
@@ -38,8 +46,13 @@ class Chat extends Component {
         client.service('messages').create({text}).then(() => {
           this.setState({message: '', autocomplete: null})
         });
+
+        let sentEmojis = findEmojis(text);
+        if(sentEmojis.length && sentEmojis[0] !== emojiPinia) {
+          this.setState({lastEmoji: sentEmojis[0]})
+        }
       } else {
-        this.sendMessage("🤜");
+        this.sendMessage(emojiPinia);
       }
     }
   }
@@ -159,9 +172,8 @@ class Chat extends Component {
 
     let logoName = this.state.logo;
 
+    let lastEmoji = this.state.lastEmoji;
     return <div className="dancefloor">
-
-      <Reactions/>
 
       <div className={'bg-side'}></div>
 
@@ -189,10 +201,7 @@ class Chat extends Component {
         </div>
       }
 
-
-      <div className={"online-users "+(users.length > 70 ? 'many-users' : '')}>
-          {users.map((user,i) => <Avatar user={user} key={user.id} index={i} total={users.length} positionInCircle={true}/>) }
-      </div>
+      <OnlineUsersWithReactions users={users}/>
 
       <div className="send-msg-bar">
           { this.renderSuggestions() }
@@ -209,9 +218,18 @@ class Chat extends Component {
           {/*  Send*/}
           {/*</button>*/}
 
+          {
+            lastEmoji ?
+              <button className="btn btn-sm btn-dark ml-2 p-0 shadow-sm"
+                      style={{fontSize: '24px'}}
+                      onClick={() => this.sendMessage(lastEmoji)}
+                      onMouseDown={dontTakeFocus}>{lastEmoji}
+              </button> : null
+          }
+
           <button className="btn btn-sm btn-dark ml-2 p-0 shadow-sm"
                   style={{fontSize: '24px'}}
-                  onClick={() => this.sendMessage("🤜")}
+                  onClick={() => this.sendMessage(emojiPinia)}
                   onMouseDown={dontTakeFocus}>👊
           </button>
         </div>
@@ -264,7 +282,7 @@ class Chat extends Component {
   }
 
   renderMessage(message, sameUser = false, skipTime = false) {
-    if (message.text.length > 2) {
+    if (message.text.length > 1 && !isEmoji(message.text)) {
       return <div key={message.id} className={"message d-flex flex-row "+(sameUser ? 'message-continue pt-0 pr-1' : 'p-0')}>
 
         <div className={'text-center mr-2 date-bar'}>

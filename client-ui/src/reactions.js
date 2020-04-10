@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import client from './feathers';
 import _ from 'lodash';
-import {Avatar} from "./avatar";
+import Avatar from "./avatar";
 
 export default class Reactions extends Component {
   constructor(props) {
@@ -17,6 +17,11 @@ export default class Reactions extends Component {
 
   componentDidMount() {
     client.service('messages').on('created', this.handleMsg);
+  }
+
+  componentWillUnmount() {
+    // Clean up listeners
+    client.service('messages').removeListener('created', this.handleMsg);
   }
 
   addTextReaction(text, userId) {
@@ -37,10 +42,7 @@ export default class Reactions extends Component {
 
     let reaction = {
       text, time: new Date().valueOf(),
-      style: {
-        left: `${Math.random() * 50 + 25}%`,
-        top: `${Math.random() * 50 + 25}%`,
-      },
+      style: this.props.getUserPositionStyle(userId),
       extraClasses
     };
 
@@ -58,12 +60,9 @@ export default class Reactions extends Component {
   handleMsg({text, userId}) {
     // if (true || text === "piña") {
       this.addTextReaction(text, userId)
-    // }
-  }
 
-  componentWillUnmount() {
-    // Clean up listeners
-    client.service('messages').removeListener('created', this.handleMsg);
+
+    // }
   }
 
   //

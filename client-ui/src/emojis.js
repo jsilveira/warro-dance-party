@@ -1,5 +1,7 @@
 // Source: https://github.com/muan/unicode-emoji-json
-module.exports = {
+import _ from 'lodash';
+
+const emojis = {
  "1st_place_medal": "🥇",
  "2nd_place_medal": "🥈",
  "3rd_place_medal": "🥉",
@@ -1737,4 +1739,13 @@ module.exports = {
  "zipper_mouth_face": "🤐",
  "zombie": "🧟",
  "zzz": "💤",
+};
+
+const emojisIndex = _.invert(emojis);
+
+const isEmoji = text => emojisIndex[(text || "").trim()];
+
+module.exports = {
+ emojis,
+ isEmoji
 };
