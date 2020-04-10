@@ -144,7 +144,7 @@ html, body, body > div {
     position: relative;
   }
 
-  .la-w {
+  .logo-container {
     grid-column-start: 1;
     grid-column-end: 2;
     grid-row-start: 2;
@@ -390,7 +390,7 @@ html, body, body > div {
     }
   }
 
-  .w {
+  .logo {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -403,15 +403,28 @@ html, body, body > div {
     //mask:url(../public/btn-pause.png);
     //background: url(../public/doblevreal.svg) no-repeat;
     //background-position: center center;
-
-    background: url(../public/doblevreal.svg) no-repeat;
-    background-position: center center;
-
     &.clone {
       background: white;
       animation: wave 1s infinite ease-in-out forwards;
       animation-delay: 0.7s;
+    }
+  }
+
+  .w {
+    background: url(../public/doblevreal.svg) no-repeat;
+    background-position: center center;
+    &.clone {
       background: url(../public/doblevreal.svg) no-repeat;
+      background-position: center center;
+    }
+  }
+
+  .joya {
+    background: url(../public/lajoya.svg) no-repeat;
+    background-position: center center;
+
+    &.clone {
+      background: url(../public/lajoya.svg) no-repeat;
       background-position: center center;
     }
   }
@@ -570,10 +583,10 @@ html, body, body > div {
 
 .user-unknown:not(.user-authenticated) {
   .dancefloor {
-    .la-w {
+    .logo-container {
       grid-column-end: 3;
       grid-row-start: 1;
-      .w {
+      .logo {
         margin-top: -300px;
       }
     }
@@ -728,6 +741,10 @@ html, body, body > div {
       
       .player-info {
         padding-left: 60px;
+        display: flex;
+        flex-flow: column;
+        justify-content: space-around;
+        height: 46px;
         .pb-1 { 
           padding-top: 0 !important;
           padding-bottom: 0 !important; 
@@ -766,14 +783,14 @@ html, body, body > div {
       display: none;
     }
 
-    .la-w {
+    .logo-container {
       grid-column-start: 1;
       grid-column-end: 2;
       grid-row-start: 2;
       grid-row-end: 3;
 
       zoom: 0.5;
-      .w { margin-top: -120px !important; }
+      .logo { margin-top: -120px !important; }
     }
 
     .online-users {

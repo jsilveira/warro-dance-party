@@ -157,11 +157,11 @@ class Chat extends Component {
       </div>
 
       {this.props.connected ?
-        <div className="la-w">
-          <div className={'w clone'}></div>
-          <div className={'w'}></div>
+        <div className="logo-container">
+          <div className={'logo w clone'}></div>
+          <div className={'logo w'}></div>
         </div>
-        : <div className="la-w">
+        : <div className="logo-container">
           <div className={'connecting text-white'}>Conectando...</div>
         </div>
       }
