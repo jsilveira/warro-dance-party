@@ -27,6 +27,7 @@ export default class Player extends Component {
     let jsonRes = await res.json();
 
     this.setState({metadata: jsonRes});
+    this.props.onMetadataUpdate(jsonRes);
     console.log(jsonRes);
 
     this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 5000);

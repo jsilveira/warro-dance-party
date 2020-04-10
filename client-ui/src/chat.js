@@ -21,7 +21,8 @@ class Chat extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      message: ''
+      message: '',
+      logo: 'w'
     };
 
     this.scrollToBottomWithDelay = () => setTimeout(() => this.scrollToBottom(), 5);
@@ -42,6 +43,18 @@ class Chat extends Component {
       }
     }
   }
+
+  onMetadataUpdate(metadata) {
+    let logo = 'w';
+    if (metadata.live && (metadata.live.streamer_name || '').match(/joya/i)) {
+      logo = 'joya';
+    }
+
+    if (this.state.logo !== logo) {
+      this.setState({logo})
+    }
+  }
+
 
   scrollToBottom(newMsg) {
     const chat = this.chat;
@@ -143,6 +156,9 @@ class Chat extends Component {
     // users = [... users, ... sampleUsers.slice(0,5)];
 
     let dontTakeFocus = e => e.preventDefault();
+
+    let logoName = this.state.logo;
+
     return <div className="dancefloor">
 
       <Reactions/>
@@ -160,13 +176,13 @@ class Chat extends Component {
       {/*</footer>*/}
 
       <div className="player-controls">
-        <Player/>
+        <Player onMetadataUpdate={this.onMetadataUpdate.bind(this)}/>
       </div>
 
       {this.props.connected ?
         <div className="logo-container">
-          <div className={'logo w clone'}></div>
-          <div className={'logo w'}></div>
+          <div className={`logo ${logoName} clone`}></div>
+          <div className={`logo ${logoName}`}></div>
         </div>
         : <div className="logo-container">
           <div className={'connecting text-white'}>Conectando...</div>
@@ -174,15 +190,8 @@ class Chat extends Component {
       }
 
 
-      <div className={"online-users "+(users.length > 20 ? 'many-users' : '')}>
-        {/*<div className="">*/}
-        {/*  <h4 className="font-300 text-center">*/}
-        {/*    <span className="font-600 online-count">{users.length}</span> users*/}
-        {/*  </h4>*/}
-        {/*</div>*/}
-
+      <div className={"online-users "+(users.length > 70 ? 'many-users' : '')}>
           {users.map((user,i) => <Avatar user={user} key={user.id} index={i} total={users.length} positionInCircle={true}/>) }
-
       </div>
 
       <div className="send-msg-bar">
