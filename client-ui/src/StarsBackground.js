@@ -8,14 +8,28 @@ export class StarsBackground extends Component {
   }
 
   componentDidMount() {
+    this.enabled = true;
     this.visualizer = new Points();
     this.rootDiv.appendChild(this.visualizer.domElement);
+    this.onWindowResize = () => {
+      this.visualizer.onWindowResize();
+    };
+    window.addEventListener("resize", this.onWindowResize);
+    this.visualizer.enable();
     this.animate();
   }
 
+  componentWillUnmount() {
+    this.visualizer.disable();
+    this.enabled = false;
+    window.removeEventListener("resize", this.onWindowResize);
+  }
+
   animate() {
-    window.requestAnimationFrame(this.animate.bind(this));
-    this.visualizer.render();
+    if (this.enabled) {
+      window.requestAnimationFrame(this.animate.bind(this));
+      this.visualizer.render();
+    }
   }
 
   render() {

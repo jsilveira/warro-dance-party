@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {now} from "moment";
 import VolumeSlider from "./VolumeSlider";
 
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+
 export default class Player extends Component {
   constructor(props) {
     super(props);
@@ -10,13 +12,24 @@ export default class Player extends Component {
       audio: 'paused'
     };
 
-    this.audioRef = React.createRef();
+    this.audioElement = null;
+    if (AudioContext) {
+      this.audioContext = new AudioContext();
+    }
   }
 
   componentDidMount() {
     this.fetchNowPlaying();
-    if(this.audioRef.current) {
-      this.audioRef.current.play();
+    if(this.audioElement) {
+      this.audioElement.play();
+    }
+  }
+
+  setAudioElement(audio) {
+    const oldAudio = this.audioElement;
+    this.audioElement = audio;
+    if (audio != oldAudio) {
+      delete this.analyser;
     }
   }
 
@@ -64,18 +77,30 @@ export default class Player extends Component {
   }
 
   onVolumeChange() {
-    if(this.audioRef.current) {
-      console.log("Volume ",this.audioRef.current.volume)
+    if(this.audioElement) {
+      console.log("Volume ",this.audioElement.volume)
     }
   }
 
   playPause() {
-    if(this.audioRef.current) {
+    if(this.audioElement) {
       if(this.state.audio == 'paused') {
-        this.audioRef.current.play();
+        this.audioElement.play();
       } else {
-        this.audioRef.current.pause();
+        this.audioElement.pause();
       }
+    }
+  }
+
+  onCanPlay() {
+    if (this.audioContext && !this.analyser) {
+      const source = this.audioContext.createMediaElementSource(this.audioElement);
+      const analyser = this.audioContext.createAnalyser();
+      analyser.smoothingTimeConstant = 0;
+      window.warrolive = window.warrolive || {};
+      this.analyser = window.warrolive.audioAnalyser = analyser;
+      source.connect(analyser);
+      analyser.connect(this.audioContext.destination);
     }
   }
 
@@ -144,11 +169,11 @@ export default class Player extends Component {
           <div>{whatIsPlaying}</div>
         </div>
 
-        <VolumeSlider htmlAudio={this.audioRef.current}/>
+        <VolumeSlider htmlAudio={this.audioElement}/>
       </div>
 
       {/*This component is hidden*/}
-      <audio ref={this.audioRef} controls src={url}
+      <audio ref={audio => this.setAudioElement(audio)} controls crossOrigin="anonymous" src={url}
 
              onError={() => this.onAudioError()}
              onAbort={() => this.onAudioError()}
@@ -159,6 +184,7 @@ export default class Player extends Component {
              onPlay={() => this.onPlay()}
              onPause={() => this.onPause()}
              onVolumeChange={this.onVolumeChange()}
+             onCanPlay={() => this.onCanPlay()}
       />
 
       <div className={'action-header'}>
