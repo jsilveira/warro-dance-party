@@ -23,6 +23,7 @@ export default class Player extends Component {
     this.onCanPlay = this.onCanPlay.bind(this);
 
     this.audio = new Audio(url);
+    this.audio.crossOrigin = true;
     if (AudioContext) {
       this.audioContext = new AudioContext();
     }
