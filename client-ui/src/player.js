@@ -1,22 +1,40 @@
 import React, {Component} from 'react';
-import {now} from "moment";
 import VolumeSlider from "./VolumeSlider";
+
+// To ensure each page reload gets a unique new stream url
+const uniqueCacheBuster = new Date().valueOf();
+const url = "https://warro.online/radio/8000/radio.mp3?"+uniqueCacheBuster;
 
 export default class Player extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      audio: 'paused'
+      audio: localStorage.getItem('player-state') || 'stopped'
     };
 
-    this.audioRef = React.createRef();
+    this.onAudioPlaying = this.onAudioPlaying.bind(this);
+    this.onAudioError = this.onAudioError.bind(this);
+    this.onAudioWait = this.onAudioWait.bind(this);
+    this.onVolumeChange = this.onVolumeChange.bind(this);
+    this.onPlay = this.onPlay.bind(this);
+    this.onPause = this.onPause.bind(this);
+
+    this.audio = new Audio(url);
   }
 
   componentDidMount() {
     this.fetchNowPlaying();
-    if(this.audioRef.current) {
-      this.audioRef.current.play();
+
+    this.audio.addEventListener('playing', this.onAudioPlaying);
+    this.audio.addEventListener('error', this.onAudioError);
+    this.audio.addEventListener('waiting', this.onAudioWait);
+    this.audio.addEventListener('volumechange', this.onVolumeChange);
+    this.audio.addEventListener('play', this.onPlay);
+    this.audio.addEventListener('pause', this.onPause);
+
+    if(this.audio && this.state.audio !== "paused") {
+      this.audio.play();
     }
   }
 
@@ -35,6 +53,13 @@ export default class Player extends Component {
 
   componentWillUnmount() {
     clearTimeout(this.fetchTimeout || 0);
+
+    this.audio.removeEventListener('playing', this.onAudioPlaying);
+    this.audio.removeEventListener('error', this.onAudioError);
+    this.audio.removeEventListener('waiting', this.onAudioWait);
+    this.audio.removeEventListener('volumechange', this.onVolumeChange);
+    this.audio.removeEventListener('play', this.onPlay);
+    this.audio.removeEventListener('pause', this.onPause);
   }
 
   logState(state, e) {
@@ -51,30 +76,32 @@ export default class Player extends Component {
   }
 
   onAudioWait() {
-    console.log("loading")
+    console.log("reconnecting")
     this.setState({audio: 'reconnecting'})
   }
 
   onPlay() {
+    localStorage.setItem('player-state', 'playing');
     this.setState({audio: 'connecting'})
   }
 
   onPause() {
+    localStorage.setItem('player-state', 'paused');
     this.setState({audio: 'paused'})
   }
 
   onVolumeChange() {
-    if(this.audioRef.current) {
-      console.log("Volume ",this.audioRef.current.volume)
+    if(this.audio) {
+      console.log("Volume ",this.audio.volume)
     }
   }
 
   playPause() {
-    if(this.audioRef.current) {
+    if(this.audio) {
       if(this.state.audio == 'paused') {
-        this.audioRef.current.play();
+        this.audio.play();
       } else {
-        this.audioRef.current.pause();
+        this.audio.pause();
       }
     }
   }
@@ -129,9 +156,6 @@ export default class Player extends Component {
       }
     }
 
-    const url = "https://warro.online/radio/8000/radio.mp3?1586033987";
-    // const url = "https://warro.online/radio/8010/radio.mp3?1586302213";
-
     return <div className={"player text-left state-"+audio}>
       <div className={'d-flex overflow-hidden'}>
         <div className={'player-btn'} onClick={this.playPause.bind(this)}><span className={'btn-play'}>Dale play</span><span className={'btn-pause'}>Pausar radio</span></div>
@@ -144,22 +168,8 @@ export default class Player extends Component {
           <div>{whatIsPlaying}</div>
         </div>
 
-        <VolumeSlider htmlAudio={this.audioRef.current}/>
+        <VolumeSlider htmlAudio={this.audio}/>
       </div>
-
-      {/*This component is hidden*/}
-      <audio ref={this.audioRef} controls src={url}
-
-             onError={() => this.onAudioError()}
-             onAbort={() => this.onAudioError()}
-
-             onWaiting={() => this.onAudioWait()}
-             onPlaying={() => this.onAudioPlaying()}
-
-             onPlay={() => this.onPlay()}
-             onPause={() => this.onPause()}
-             onVolumeChange={this.onVolumeChange()}
-      />
 
       <div className={'action-header'}>
         {

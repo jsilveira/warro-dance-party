@@ -11,7 +11,7 @@ export default class VolumeSlider extends React.PureComponent {
 
     if(lastVolume) {
       let vol = parseFloat(lastVolume);
-      this.state = {volume: vol}
+      this.state = {volume: vol, muted: vol === 0}
     } else {
       this.state = {volume: props.htmlAudio ? props.htmlAudio.volume : 1}
     }
@@ -25,6 +25,9 @@ export default class VolumeSlider extends React.PureComponent {
 
   componentDidMount() {
     //TODO: Hook to htmlAudio volume changes
+    if (this.props.htmlAudio && this.props.htmlAudio.volume !== this.state.volume) {
+      this.props.htmlAudio.volume = this.state.volume;
+    }
   }
 
   componentWillUnmount() {
@@ -37,8 +40,9 @@ export default class VolumeSlider extends React.PureComponent {
 
   mute() {
     if(this.state.muted) {
-      this.setState({muted: false});
-      this.setAudioVol(this.state.volume);
+      // If the volume was 0, set it to 1
+      this.setState({muted: false, volume: this.state.volume || 1});
+      this.setAudioVol(this.state.volume || 1);
     } else {
       this.setState({muted: true})
       this.setAudioVol(0);
