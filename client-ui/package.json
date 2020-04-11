@@ -9,7 +9,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-linkify": "^1.0.0-alpha",
-    "socket.io-client": "^1.7.3"
+    "socket.io-client": "^1.7.3",
+    "three": "^0.115.0"
   },
   "browserslist": [
     "last 1 Chrome versions"
