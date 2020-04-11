@@ -41,7 +41,7 @@ export default class Player extends Component {
     this.audio.addEventListener('canplay', this.onCanPlay);
 
     if(this.audio && localStorage.getItem('player-state') !== "paused") {
-      this.audio.play();
+      this.tryPlay();
     }
   }
 
@@ -104,10 +104,23 @@ export default class Player extends Component {
     }
   }
 
+  tryPlay() {
+    try {
+      this.audio.play();
+    } catch (e) {
+      console.warn("tried to play but couldn't", e);
+    }
+    if (this.audioContext) {
+      this.audioContext.resume().then(() => {
+        console.log("audio context resumed");
+      });
+    }
+  }
+
   playPause() {
     if(this.audio) {
       if(this.state.audio == 'paused') {
-        this.audio.play();
+        this.tryPlay();
       } else {
         this.audio.pause();
       }
