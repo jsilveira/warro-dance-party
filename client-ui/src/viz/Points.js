@@ -5,7 +5,7 @@ import {Visualizer} from "./Visualizer.js";
 export class Points extends Visualizer {
   constructor() {
     super();
-    this.intensity = .5;
+    this.intensity = .1;
     this.gridWidth = 50;
     this.gridLength = 50;
     this.baseColor = new THREE.Color(1, .5, .1);
@@ -18,7 +18,8 @@ export class Points extends Visualizer {
     camera.lookAt(scene.position);
     camera.updateMatrix();
 
-    var geometry = this.geometry = this.generatePointCloudGeometry();
+    this.generatePointCloudGeometry();
+    var geometry = this.geometry;
     var material = new THREE.PointsMaterial({size : .1, vertexColors : true});
     var points = new THREE.Points(geometry, material);
     points.scale.set(50, 25, 50);
@@ -39,15 +40,11 @@ export class Points extends Visualizer {
 
     this.positions = new Float32Array(numPoints * 3);
     this.colors = new Float32Array(numPoints * 3);
-
-    this.updatePositionsAndColors();
-
     geometry.setAttribute('position',
                           new THREE.BufferAttribute(this.positions, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
-    geometry.computeBoundingBox();
-
-    return geometry;
+    this.geometry = geometry;
+    this.updatePositionsAndColors();
   }
 
   updatePositionsAndColors() {
@@ -70,7 +67,7 @@ export class Points extends Visualizer {
         positions[3 * k + 1] = y;
         positions[3 * k + 2] = z;
 
-        var intensity = (0.1 + 0.4 * y + 0.2 * this.intensity) * 2;
+        var intensity = (0.1 + 0.2 * y + 2.0 * this.intensity) * 3;
         colors[3 * k] = baseColor.r * intensity;
         colors[3 * k + 1] = baseColor.g * intensity;
         colors[3 * k + 2] = baseColor.b * intensity;
@@ -78,6 +75,9 @@ export class Points extends Visualizer {
         k++;
       }
     }
+    this.geometry.attributes.position.needsUpdate = true;
+    this.geometry.attributes.color.needsUpdate = true;
+    this.geometry.computeBoundingBox();
   }
 
   onWindowResize() {
@@ -109,7 +109,5 @@ export class Points extends Visualizer {
     }
     this.intensity = Math.pow(this.max, 2);
     this.updatePositionsAndColors();
-    this.geometry.attributes.position.needsUpdate = true;
-    this.geometry.attributes.color.needsUpdate = true;
   }
 }
