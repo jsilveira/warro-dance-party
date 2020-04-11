@@ -1,5 +1,5 @@
 const {Service} = require('feathers-memory');
-const {isEmoji, findEmojis} = require('./../../../../server/src/emojis');
+const {isEmoji, findEmojis} = require('./../../emojis');
 
 exports.Messages = class Messages extends Service {
   async create(data, params) {
