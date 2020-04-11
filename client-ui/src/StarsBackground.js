@@ -1,16 +1,29 @@
-import React, {Component} from "react";
-import _ from 'lodash'
+import React, { Component } from "react";
+import THREE from "three";
+import { Points } from "./viz/Points.js";
 
-const stars = _.map(_.range(0, 100), (i) => {
-  let randomPositionStyle = {
-    opacity: `${Math.random()**3}`,
-    top: `${Math.random() * 100}%`,
-    left: `${Math.random() * 100}%`
-  };
+export class StarsBackground extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-  return <div className={"star"} key={i} style={randomPositionStyle}/>;
-});
+  componentDidMount() {
+    this.visualizer = new Points();
+    this.rootDiv.appendChild(this.visualizer.domElement);
+    this.animate();
+  }
 
-export default function() {
-  return <div className={'stars-container'}>{stars}</div>
-};
+  animate() {
+    window.requestAnimationFrame(this.animate.bind(this));
+    this.visualizer.render();
+  }
+
+  render() {
+    return (
+      <div
+        className={"stars-container"}
+        ref={element => (this.rootDiv = element)}
+      />
+    );
+  }
+}
