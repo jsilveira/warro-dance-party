@@ -4,6 +4,7 @@ import VolumeSlider from "./VolumeSlider";
 // To ensure each page reload gets a unique new stream url
 const uniqueCacheBuster = new Date().valueOf();
 const url = "https://warro.online/radio/8000/radio.mp3?"+uniqueCacheBuster;
+const AudioContext = window.AudioContext || window.webkitAudioContext;
 
 export default class Player extends Component {
   constructor(props) {
@@ -19,8 +20,12 @@ export default class Player extends Component {
     this.onVolumeChange = this.onVolumeChange.bind(this);
     this.onPlay = this.onPlay.bind(this);
     this.onPause = this.onPause.bind(this);
+    this.onCanPlay = this.onCanPlay.bind(this);
 
     this.audio = new Audio(url);
+    if (AudioContext) {
+      this.audioContext = new AudioContext();
+    }
   }
 
   componentDidMount() {
@@ -32,6 +37,7 @@ export default class Player extends Component {
     this.audio.addEventListener('volumechange', this.onVolumeChange);
     this.audio.addEventListener('play', this.onPlay);
     this.audio.addEventListener('pause', this.onPause);
+    this.audio.addEventListener('canplay', this.onCanPlay);
 
     if(this.audio && localStorage.getItem('player-state') !== "paused") {
       this.audio.play();
@@ -60,6 +66,7 @@ export default class Player extends Component {
     this.audio.removeEventListener('volumechange', this.onVolumeChange);
     this.audio.removeEventListener('play', this.onPlay);
     this.audio.removeEventListener('pause', this.onPause);
+    this.audio.removeEventListener('canplay', this.onCanPlay);
   }
 
   logState(state, e) {
@@ -103,6 +110,18 @@ export default class Player extends Component {
       } else {
         this.audio.pause();
       }
+    }
+  }
+
+  onCanPlay() {
+    if (this.audioContext && !this.analyser) {
+      const source = this.audioContext.createMediaElementSource(this.audio);
+      const analyser = this.audioContext.createAnalyser();
+      analyser.smoothingTimeConstant = 0;
+      window.warrolive = window.warrolive || {};
+      this.analyser = window.warrolive.audioAnalyser = analyser;
+      source.connect(analyser);
+      analyser.connect(this.audioContext.destination);
     }
   }
 
