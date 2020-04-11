@@ -24,10 +24,11 @@ class Chat extends Component {
     super(props)
     this.state = {
       message: '',
-      logo: 'w'
+      logo: 'w',
+      scrollInBottom: true
     };
 
-    this.scrollToBottomWithDelay = () => setTimeout(() => this.scrollToBottom(), 5);
+    this.scrollToBottomWithDelay = (... args) => setTimeout(() => this.scrollToBottomOnMessage(... args), 5);
   }
 
   sendMessage(text) {
@@ -62,10 +63,20 @@ class Chat extends Component {
     }
   }
 
-
   scrollToBottom(newMsg) {
     const chat = this.chat;
     chat.scrollTop = chat.scrollHeight - chat.clientHeight;
+  }
+
+  scrollToBottomOnMessage({text, userId}) {
+    // Only autoscroll when the scroll is already on the bottom
+    if(this.state.scrollInBottom) {
+      let allEmojis = findEmojis(text);
+
+      if (allEmojis.length === 0 || allEmojis.join('') !== text) {
+        this.scrollToBottom()
+      }
+    }
   }
 
   componentDidMount() {
@@ -125,6 +136,15 @@ class Chat extends Component {
     }
 
     this.setState({message: text})
+  }
+
+  handleScroll(e) {
+    const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (!bottom && this.state.scrollInBottom) {
+      this.setState({scrollInBottom: false})
+    } else if(!this.state.scrollInBottom) {
+      this.setState({scrollInBottom: true})
+    }
   }
 
   emojiCandidates(prefix) {
@@ -187,7 +207,7 @@ class Chat extends Component {
 
       <div className={'bg-side'}></div>
 
-      <div className="chat px-4 pt-2 pb-4" ref={main => this.chat = main}>
+      <div className="chat px-4 pt-2 pb-4" ref={main => this.chat = main} onScroll={this.handleScroll.bind(this)}>
         <div  className="chat-window">{this.renderMessages(messages)}</div>
       </div>
 
