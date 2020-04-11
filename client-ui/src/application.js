@@ -3,7 +3,7 @@ import Login from './login';
 import Chat from './chat';
 import client from './feathers';
 import _ from 'lodash'
-import StarsBackground from "./StarsBackground";
+import {StarsBackground} from "./StarsBackground";
 
 class Application extends Component {
   constructor(props) {
