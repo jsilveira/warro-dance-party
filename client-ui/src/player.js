@@ -10,7 +10,7 @@ export default class Player extends Component {
     super(props);
 
     this.state = {
-      audio: localStorage.getItem('player-state') || 'stopped'
+      audio: 'paused'
     };
 
     this.onAudioPlaying = this.onAudioPlaying.bind(this);
@@ -33,7 +33,7 @@ export default class Player extends Component {
     this.audio.addEventListener('play', this.onPlay);
     this.audio.addEventListener('pause', this.onPause);
 
-    if(this.audio && this.state.audio !== "paused") {
+    if(this.audio && localStorage.getItem('player-state') !== "paused") {
       this.audio.play();
     }
   }

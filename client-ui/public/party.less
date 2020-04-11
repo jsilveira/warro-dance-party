@@ -382,7 +382,7 @@ html, body, body > div {
         background-image: url('../public/btn-pause.png');
       }
     }
-    &.state-paused {
+    &.state-paused,  &.state-stopped {
       .player-btn {
         background-image: url('../public/btn-play.png');
       }
@@ -647,7 +647,7 @@ html, body, body > div {
         box-sizing: border-box;
         border: 3px solid transparent;
       }
-      &.state-paused {
+      &.state-paused, &.state-stopped {
         .player-btn {
           .btn-play { display: block; }
         }
