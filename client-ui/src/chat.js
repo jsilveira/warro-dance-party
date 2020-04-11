@@ -5,7 +5,7 @@ import Linkify from 'react-linkify';
 
 import client from './feathers';
 import Player from './player';
-import {emojis, isEmoji} from './emojis'
+import {emojis, findEmojis} from './../../server/src/emojis';
 import Avatar from "./avatar";
 import OnlineUsersWithReactions from "./OnlineUsersWithReactions";
 
@@ -18,12 +18,6 @@ const chatLinksComponent = (href, text, key) => (
 );
 
 const emojiPinia = "🤜";
-
-const findEmojis = (text) => {
-  let parts = text.split(/[\w ]+/);
-  return _.filter(parts, e => isEmoji(e));
-};
-
 
 class Chat extends Component {
   constructor(props) {
@@ -142,6 +136,21 @@ class Chat extends Component {
     return emojiMatch;
   }
 
+  selectEmoji(emoji) {
+    let msg = this.state.message;
+    let [, prefix] = msg.match(/:([\w_]+)$/) || [];
+
+    if (prefix) {
+      msg = msg.replace(/:[\w_]+$/, emoji);
+    } else {
+      let emojis = findEmojis(msg);
+      if(emojis.length) {
+        msg = msg.replace(new RegExp(emojis[emojis.length-1]+"$"), emoji);
+      }
+    }
+    this.setState({message: msg})
+  }
+
   renderSuggestions() {
     const {autocomplete, nextEmoji} = this.state;
     if (autocomplete) {
@@ -151,6 +160,7 @@ class Chat extends Component {
           _.map(autocomplete.slice(0, 15), (emojiName,i) => <span
             className={'emoji p-1 text-lg '+(nextEmoji == (i+1) ? 'bg-primary rounded' : '')}
             key={emojiName}
+            onClick={(() => this.selectEmoji(emojis[emojiName]))}
             title={emojiName}>
           {emojis[emojiName]}
         </span>)
@@ -282,7 +292,9 @@ class Chat extends Component {
   }
 
   renderMessage(message, sameUser = false, skipTime = false) {
-    if (message.text.length > 1 && !isEmoji(message.text)) {
+    let isAllEmojis = findEmojis(message.text).join('') === message.text;
+
+    if (message.text.length > 1 && !isAllEmojis) {
       return <div key={message.id} className={"message d-flex flex-row "+(sameUser ? 'message-continue pt-0 pr-1' : 'p-0')}>
 
         <div className={'text-center mr-2 date-bar'}>

@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 import client from './feathers';
 import _ from 'lodash';
 import Avatar from "./avatar";
+import {emojis, isEmoji, findEmojis} from './../../server/src/emojis';
+
+const sleep = async time => new Promise(r => setTimeout(r, time));
+
 
 export default class Reactions extends Component {
   constructor(props) {
@@ -24,10 +28,20 @@ export default class Reactions extends Component {
     client.service('messages').removeListener('created', this.handleMsg);
   }
 
-  addTextReaction(text, userId) {
+  async addTextReaction(text, userId) {
     const extraClasses = [];
 
-    let isEmojiOrLetter = text.length <= 2;
+    let allEmojis = findEmojis(text);
+
+    if(allEmojis.length > 1 && allEmojis.join('') === text) {
+      for(const emoji of allEmojis.slice(0,50)) {
+        this.addTextReaction(emoji, userId);
+        await sleep(350);
+      }
+      return;
+    }
+
+    let isEmojiOrLetter = text.length <= 2 || isEmoji(text);
     if(isEmojiOrLetter) {
       extraClasses.push('emoji')
     }
