@@ -34,7 +34,11 @@ app.use('/', express.static(app.get('public')+'/ui/'));
 app.use('/', express.static(app.get('public')));
 
 app.get('/agenda', (req, res) => {
-  res.redirect(307, 'https://teamup.com/ksvxpbpcuwfacy64tt');
+  res.redirect(307, 'https://teamup.com/ks4u2t8nt87a8m2baw');
+});
+
+app.get('/agenda-admin', (req, res) => {
+  res.redirect(307, 'https://teamup.com/ksekns8wj4coffwxxn');
 });
 
 app.get('/', (req, res) => {
