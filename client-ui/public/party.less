@@ -195,6 +195,7 @@ html, body, body > div {
       top: 50%;
       transition: margin-left 1s, margin-top 1s, opacity 1s, transform 0.5s;
       pointer-events: visible;
+      will-change: transform;
 
       &:hover {
         text-align: center;
@@ -518,6 +519,7 @@ html, body, body > div {
     overflow-y:auto;
     border-bottom: solid 1px transparent;
     pointer-events: visible;
+    will-change: transform;
 
     color: white;
     //border-radius: 5px;
