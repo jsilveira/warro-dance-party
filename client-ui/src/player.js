@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import VolumeSlider from "./VolumeSlider";
+import {UserSettings} from './UserSettings';
 
 // To ensure each page reload gets a unique new stream url
 const uniqueCacheBuster = new Date().valueOf();
 const url = "https://warro.online/radio/8000/radio.mp3?"+uniqueCacheBuster;
+
 
 export default class Player extends Component {
   constructor(props) {
@@ -176,6 +178,7 @@ export default class Player extends Component {
           uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} seres escuchando</span> : null
         }
         <a href="/agenda" target={'_blank'} className={'btn btn-secondary'}>Ver agenda</a>
+        {this.props.user ? <UserSettings user={this.props.user}/> : null }
       </div>
     </div>;
   }

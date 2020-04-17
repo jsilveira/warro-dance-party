@@ -4,6 +4,8 @@ const { Service } = require('feathers-memory');
 const crypto = require('crypto');
 const uuid = require('uuid');
 
+const inMemoryAvatar = require('../avatars/InMemoryAvatar');
+
 // The Gravatar image service
 const gravatarUrl = 'https://s.gravatar.com/avatar';
 // The size query. Our chat needs 60px images
@@ -12,7 +14,7 @@ const query = 's=60&d=blank';
 exports.Users = class Users extends Service {
   async create (data, params) {
     // This is the information we want from the user signup data
-    const { email, githubId, password } = data;
+    const { email, githubId, password, imageData } = data;
     // Gravatar uses MD5 hashes from an email address (all lowercase) to get the image
     const hash = crypto.createHash('md5').update(email.toLowerCase()).digest('hex');
     // The full avatar URL
@@ -29,8 +31,26 @@ exports.Users = class Users extends Service {
     if((await this.find({query: {email}})).total) {
       console.log('user already exists: ', email);
     } else {
+      if(imageData) {
+        userData.avatar = await inMemoryAvatar.create({userId: userData.id, imageData});
+      }
       // Call the original `create` method with existing `params` and new data
-      return super.create(userData, params);
+      let userResponse = await super.create(userData, params);
+      return userResponse;
+    }
+  }
+
+  async update(id, {imageData, ... updatedData}, params) {
+    let user = await this.get(id);
+
+    // only let a user change its own fields
+    if(user && id === params.user.id) {
+      if(imageData) {
+        updatedData.avatar = await inMemoryAvatar.create({userId: id, imageData});
+      }
+      return super.update(id, {... user, ... updatedData});
+    } else {
+      throw new Error('Invalid update')
     }
   }
 
