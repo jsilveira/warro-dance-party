@@ -4,6 +4,8 @@ const { Service } = require('feathers-memory');
 const crypto = require('crypto');
 const uuid = require('uuid');
 
+const inMemoryAvatar = require('../avatars/InMemoryAvatar');
+
 // The Gravatar image service
 const gravatarUrl = 'https://s.gravatar.com/avatar';
 // The size query. Our chat needs 60px images
@@ -30,7 +32,22 @@ exports.Users = class Users extends Service {
       console.log('user already exists: ', email);
     } else {
       // Call the original `create` method with existing `params` and new data
-      return super.create(userData, params);
+      let userResponse = await super.create(userData, params);
+      return userResponse;
+    }
+  }
+
+  async update(id, {imageData, ... updatedData}, params) {
+    let user = await this.get(id);
+
+    // only let a user change its own fields
+    if(user && id === params.user.id) {
+      if(imageData) {
+        updatedData.avatar = await inMemoryAvatar.create({userId: id, imageData});
+      }
+      return super.update(id, {... user, ... updatedData});
+    } else {
+      throw new Error('Invalid update')
     }
   }
 

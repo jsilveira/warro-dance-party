@@ -25,27 +25,39 @@ export default class Login extends Component {
     this.setState({ [name]: ev.target.value });
   }
 
-  login() {
+  async login() {
     const { email } = this.state;
 
     document.body.classList.add('user-authenticated');
 
-    return client.authenticate({
-      strategy: 'local',
-      email, password: '1234'
-    }).catch(error => this.setState({ error }));
+    try {
+      await client.authenticate({
+        strategy: 'local',
+        email, password: '1234'
+      });
+      console.log("Login with user", user)
+    } catch(error) {
+      this.setState({ error })
+    }
   }
 
-  signup() {
+  async signup() {
+    let users = client.service('users');
+
     const { email } = this.state;
 
     localStorage.setItem('email', email);
 
-    // document.body.classList.remove('user-unknown');
+    const user = await users.create({ email, password: '1234' });
 
-    return client.service('users')
-      .create({ email, password: '1234' })
-      .then(() => this.login());
+    await this.login();
+
+    // If the user has an avatar image from the past, make sure to set it
+    let lastAvatarData = localStorage.getItem('avatarBase64Data');
+    if(user && lastAvatarData) {
+      console.log("Setting previous avatar image...");
+      users.update(user.id, {imageData: lastAvatarData});
+    }
   }
 
   render() {
