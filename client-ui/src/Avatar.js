@@ -40,7 +40,7 @@ export default class Avatar extends Component {
     return <div className={"avatar "+(className || "")} style={style}>
       <div className={"round-avatar"} style={styleBgd}>
         <span className={'initials'} style={styleColor}>{initials}</span>
-        <img src={user.avatar.replace(/s=60$/, "s=60&d=blank")} alt={user.email} className="gravatar"/>
+        <img src={(user.avatar || "").replace(/s=60$/, "s=60&d=blank")} alt={user.email} className="gravatar"/>
         <div className={'avatar-fill'} style={styleFill}></div>
       </div>
       <div className="avatar-name bg-dark shadow-sm" style={styleColor}>{name(this.props.user)}</div>
