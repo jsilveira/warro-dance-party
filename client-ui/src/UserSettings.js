@@ -57,16 +57,17 @@ export class UserSettings extends Component {
     super(props);
     this.state = {
       showMenu : false,
-      user : {
-        email : "fdsa",
-        id : "123456789",
-        avatar :
-            "https://s.gravatar.com/avatar/da71b39fd9972ecff794c1eb837058a2?s=60&d=blank",
-      }
     };
     this.showMenu = this.showMenu.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
+    this.onAuthenticated = this.onAuthenticated.bind(this);
   }
+
+  onAuthenticated({user}) { this.setState({user}); }
+
+  componentDidMount() { client.on("authenticated", this.onAuthenticated); }
+
+  componentWillUnmount() { client.off("authenticated", this.onAuthenticated); }
 
   showMenu(event) {
     event.preventDefault();
@@ -91,20 +92,20 @@ export class UserSettings extends Component {
     event.preventDefault();
     getImageFile()
         .then(getFileDataURL)
-        .then(url => { return cropImage(url, 40, 40); })
+        .then(url => { return cropImage(url, 60, 60); })
         .then(url => {
           const user = this.state.user;
           user.avatar = url;
+          client.service('users').update(user.id, {imageData: url});
           this.setState({user});
         });
   }
 
   render() {
-    return (
+    return (this.state.user? (
       <div className="UserSettings">
         <a href="#" onClick={this.showMenu}>
-          <Avatar user={
-      this.state.user} />
+          <Avatar user={this.state.user} />
         </a>
         {this.state.showMenu ? (
           <div className="menu">
@@ -115,6 +116,6 @@ export class UserSettings extends Component {
           </div>
         ) : null}
       </div>
-    );
+    ): null);
   }
 }
