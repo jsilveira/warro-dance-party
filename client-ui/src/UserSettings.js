@@ -63,6 +63,13 @@ export class UserSettings extends Component {
     this.showMenu = this.showMenu.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
     this.onAuthenticated = this.onAuthenticated.bind(this);
+
+    var newfeat = localStorage.getItem('newfeat');
+    if (newfeat== null) {
+      localStorage.setItem('newfeat', 1);
+    } else {
+      localStorage.setItem('newfeat', 0);
+    }
   }
 
   onAuthenticated({user}) {
@@ -84,6 +91,7 @@ export class UserSettings extends Component {
   }
 
   closeMenu() {
+    localStorage.setItem('newfeat', 0);
     this.setState({showMenu: false}, () => document.removeEventListener('click', this.closeMenu));
   }
 
@@ -118,15 +126,16 @@ export class UserSettings extends Component {
       <div className="UserSettings">
         <a href="#" onClick={this.showMenu}>
           <Avatar user={user}/>
+          {localStorage.getItem('newfeat') == 1 ? <div className={this.state.showMenu ? 'new-stuff hide' : 'new-stuff'}>¡Ahora podés cambiar tu nombre y foto!</div> : null}
         </a>
         {this.state.showMenu ? (
-          <div className="menu text-center">
-            <div className={'mx-3 my-1'} style={{color: Avatar.getUserColor(user.id)}}>
-              {user.email}
+          <div className="menu">
+            <div className={'username'} style={{color: Avatar.getUserColor(user.id)}}>
+              ¡Hola {user.email}!
             </div>
             <ul>
-              <li><a href="#" onClick={this.changeName.bind(this)}>Cambiar nombre...</a></li>
-              <li><a href="#" onClick={this.changeAvatar.bind(this)}>Cambiar foto...</a></li>
+              <li><a href="#" onClick={this.changeName.bind(this)}>Cambiar nombre <i className={'material-icons'}>chevron_right</i></a></li>
+              <li><a href="#" onClick={this.changeAvatar.bind(this)}>Cambiar foto <i className={'material-icons'}>chevron_right</i></a></li>
             </ul>
           </div>
         ) : null}
