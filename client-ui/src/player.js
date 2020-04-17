@@ -178,7 +178,7 @@ export default class Player extends Component {
           uniqueListeners ? <span className={'listeners text-primary'}>{uniqueListeners} seres escuchando</span> : null
         }
         <a href="/agenda" target={'_blank'} className={'btn btn-secondary'}>Ver agenda</a>
-        <UserSettings />
+        {this.props.user ? <UserSettings user={this.props.user}/> : null }
       </div>
     </div>;
   }

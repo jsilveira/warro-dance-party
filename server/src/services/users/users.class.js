@@ -14,7 +14,7 @@ const query = 's=60&d=blank';
 exports.Users = class Users extends Service {
   async create (data, params) {
     // This is the information we want from the user signup data
-    const { email, githubId, password } = data;
+    const { email, githubId, password, imageData } = data;
     // Gravatar uses MD5 hashes from an email address (all lowercase) to get the image
     const hash = crypto.createHash('md5').update(email.toLowerCase()).digest('hex');
     // The full avatar URL
@@ -31,6 +31,9 @@ exports.Users = class Users extends Service {
     if((await this.find({query: {email}})).total) {
       console.log('user already exists: ', email);
     } else {
+      if(imageData) {
+        userData.avatar = await inMemoryAvatar.create({userId: userData.id, imageData});
+      }
       // Call the original `create` method with existing `params` and new data
       let userResponse = await super.create(userData, params);
       return userResponse;

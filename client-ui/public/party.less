@@ -284,6 +284,7 @@ html, body, body > div {
     }
 
     .avatar-name {
+      display: none;
       padding: 0 6px;
       z-index: 1;
       color: #35cd96;
@@ -293,7 +294,8 @@ html, body, body > div {
       font-size: 11px;
       top: calc(60px / 2 - 15px / 2);
       height: 15px;
-      display: none;
+      transform: translateX(-50%);
+      margin-left: 25px;
     }
   }
 
@@ -489,7 +491,6 @@ html, body, body > div {
     right: 0px;
     width: 450px;
     height: 100px;
-    line-height: 100px;
     padding: 0 2em;
     display: flex;
     flex-direction: row;

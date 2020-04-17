@@ -48,16 +48,18 @@ export default class Login extends Component {
 
     localStorage.setItem('email', email);
 
-    const user = await users.create({ email, password: '1234' });
-
-    await this.login();
+    let newUser = { email, password: '1234' };
 
     // If the user has an avatar image from the past, make sure to set it
     let lastAvatarData = localStorage.getItem('avatarBase64Data');
-    if(user && lastAvatarData) {
+    if(lastAvatarData) {
       console.log("Setting previous avatar image...");
-      users.update(user.id, {imageData: lastAvatarData});
+      newUser.imageData = lastAvatarData;
     }
+
+    await users.create(newUser);
+
+    await this.login();
   }
 
   render() {

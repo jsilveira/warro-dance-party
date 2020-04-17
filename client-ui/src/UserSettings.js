@@ -55,67 +55,82 @@ function cropImage(url, width, height) {
 export class UserSettings extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      showMenu : false,
+      showMenu: false,
     };
+
     this.showMenu = this.showMenu.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
     this.onAuthenticated = this.onAuthenticated.bind(this);
   }
 
-  onAuthenticated({user}) { this.setState({user}); }
+  onAuthenticated({user}) {
+    this.setState({user});
+  }
 
-  componentDidMount() { client.on("authenticated", this.onAuthenticated); }
+  componentDidMount() {
+    client.on("authenticated", this.onAuthenticated);
+  }
 
-  componentWillUnmount() { client.off("authenticated", this.onAuthenticated); }
+  componentWillUnmount() {
+    client.off("authenticated", this.onAuthenticated);
+  }
 
   showMenu(event) {
     event.preventDefault();
 
-    this.setState(
-        {showMenu : true},
-        () => { document.addEventListener('click', this.closeMenu); });
+    this.setState({showMenu: true}, () => document.addEventListener('click', this.closeMenu));
   }
 
   closeMenu() {
-    this.setState(
-        {showMenu : false},
-        () => { document.removeEventListener('click', this.closeMenu); });
+    this.setState({showMenu: false}, () => document.removeEventListener('click', this.closeMenu));
   }
 
-  changeName(event) {
+  async changeName(event) {
     event.preventDefault();
-    //
+
+    let user = this.props.user;
+    let newName = prompt("Modificá tu nombre", user.email);
+    if (newName && newName !== user.email) {
+      await client.service('users').update(user.id, {email: newName});
+      localStorage.setItem('email', newName);
+    }
   }
 
   changeAvatar(event) {
     event.preventDefault();
+
     getImageFile()
-        .then(getFileDataURL)
-        .then(url => { return cropImage(url, 60, 60); })
-        .then(url => {
-          const user = this.state.user;
-          user.avatar = url;
-          client.service('users').update(user.id, {imageData: url});
-          this.setState({user});
-        });
+      .then(getFileDataURL)
+      .then(url => cropImage(url, 60, 60))
+      .then(async url => {
+        const user = this.props.user;
+        await client.service('users').update(user.id, {imageData: url});
+        localStorage.setItem('avatarBase64Data', url);
+      });
   }
 
   render() {
-    return (this.state.user? (
+    let user = this.props.user;
+
+    return (user ? (
       <div className="UserSettings">
         <a href="#" onClick={this.showMenu}>
-          <Avatar user={this.state.user} />
+          <Avatar user={user}/>
         </a>
         {this.state.showMenu ? (
-          <div className="menu">
+          <div className="menu text-center">
+            <div className={'mx-3 my-1'} style={{color: Avatar.getUserColor(user.id)}}>
+              {user.email}
+            </div>
             <ul>
-              {/* TODO <li><a href="#" onClick={this.changeName.bind(this)}>Cambiar nombre</a></li> */}
-              <li><a href="#" onClick={this.changeAvatar.bind(this)}>Cambiar foto</a></li>
+              <li><a href="#" onClick={this.changeName.bind(this)}>Cambiar nombre...</a></li>
+              <li><a href="#" onClick={this.changeAvatar.bind(this)}>Cambiar foto...</a></li>
             </ul>
           </div>
         ) : null}
       </div>
-    ): null);
+    ) : null);
   }
 }

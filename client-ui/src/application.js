@@ -16,22 +16,28 @@ class Application extends Component {
   }
 
 
-  userUpdated(user) {
+  userUpdated(updatedUser) {
     // Replace old user with new one
     let users = this.state.users;
-    let pos = _.findIndex(users, u => u.id === user.id);
+    let pos = _.findIndex(users, u => u.id === updatedUser.id);
     if(pos >= 0) {
-      users[pos] = user;
+      users[pos] = updatedUser;
+    }
+
+    // Change current user
+    let user = this.state.user;
+    if(user && user.id === updatedUser.id) {
+      user = updatedUser;
     }
 
     // Update messages' users
     _.each(this.state.messages, msg => {
-      if(msg.user.id === user.id) {
-        msg.user = user;
+      if(msg.user.id === updatedUser.id) {
+        msg.user = updatedUser;
       }
     });
 
-    this.setState({users, messages: this.state.messages})
+    this.setState({users, messages: this.state.messages, user})
   }
 
   componentDidMount() {
@@ -59,6 +65,8 @@ class Application extends Component {
 
     // On successfull login
     client.on('authenticated', login => {
+      this.setState({user: login.user});
+
       // Get all users and messages
       Promise.all([
         messages.find({
@@ -115,6 +123,8 @@ class Application extends Component {
   }
 
   render() {
+    let {messages, users, connected, user} = this.state;
+
     let login = null;
 
     if (this.state.connected && !this.state.login) {
@@ -122,9 +132,12 @@ class Application extends Component {
         <Login/>
       </div>;
     }
+
     return <React.Fragment>
       {login}
-      <Chat ref={this.chatRef} messages={this.state.messages} users={this.state.users} connected={this.state.connected}/>
+
+      <Chat ref={this.chatRef} messages={messages} users={users} connected={connected} user={user}/>
+
       <StarsBackground/>
     </React.Fragment>
   }
