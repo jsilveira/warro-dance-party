@@ -30,16 +30,16 @@ export default class Avatar extends Component {
 
     let initials = (email || "").slice(0, 2)
 
-    let avatarUrl = user.avatar.replace(/s=60$/, "s=60&d=blank");
-
+    let avatarUrl = user.avatar;
+    
     //TODO: Uncomment for development
-    // if(avatarUrl.startsWith('/avatars')) {
+    // if(avatarUrl && avatarUrl.startsWith('/avatars')) {
     //   avatarUrl = `${window.socketUri}${avatarUrl}`
     // }
 
     const colA = Avatar.getUserColor(user.id);
 
-    const styleBgd = {
+    let styleBgd = {
       // background: `linear-gradient(${s}deg, ${colA} 20%, ${colB} 80%)`
       border: `solid 1px ${colA}`
     };
@@ -53,13 +53,19 @@ export default class Avatar extends Component {
       color: `${colA}`
     };
 
+    // If there is an avatar image, use fill also to improve border artifacts
+    if(avatarUrl) {
+      styleBgd = {... styleBgd, ... styleFill};
+    }
+
+
     style = style || {};
 
     return <div className={"avatar "+(className || "")} style={style}>
       <div className={"round-avatar"} style={styleBgd}>
-        <span className={'initials'} style={styleColor}>{initials}</span>
-        <img src={avatarUrl} alt={user.email} className="gravatar"/>
-        <div className={'avatar-fill'} style={styleFill}></div>
+        { avatarUrl ? null : <span className={'initials'} style={styleColor}>{initials}</span> }
+        { avatarUrl ? <img src={avatarUrl} alt={user.email} className="gravatar"/> : null }
+        { avatarUrl ? null : <div className={'avatar-fill'} style={styleFill}></div> }
       </div>
       <div className="avatar-name bg-dark shadow-sm" style={styleColor}>{name(this.props.user)}</div>
     </div>;

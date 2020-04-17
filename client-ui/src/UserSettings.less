@@ -1,20 +1,82 @@
 .UserSettings {
+  position: relative;
+  > a:hover {
+    text-decoration: none;
+  }
+
+  .avatar {
+    .round-avatar {
+      zoom: 0.8;
+      text-decoration: none;
+    }
+  }
+  .new-stuff {
+    position: absolute;
+    width: auto;
+    white-space: nowrap;
+    top: 50px;
+    right: 0;
+    color: #fff;
+    background: #007bff;
+    font-size: 12px;
+    border-radius: 3px;
+
+    padding: 5px 10px;
+    animation: hidethis 0s ease-in 20s forwards, shine 1s ease-in-out alternate infinite;
+
+    &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      top: -10px;
+      right: 13px;
+      border: 5px solid transparent;
+      border-bottom: 5px solid #007bff;
+    }
+    &.hide { display: none; }
+  }
   .menu {
     background: #0c0c19;
     color: white;
     position: absolute;
     right: 0;
-    margin-top: 0.5em;
-    margin-right: 0.5em;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #333;
-    border-radius: 3px;
-    text-align: right;
+    top: 50px;
+    width: 225px;
+    // margin: .5em .5em 0 0;
+    border: 2px solid #384363;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 2em;
+    //text-transform: uppercase;
+    padding: .75em 1em;
+    box-shadow: 0px 5px 20px #0c0c19;
+
+    &:before,
+    &:after {
+      content: "";
+      display: block;
+      height: 0;
+      width: 0;
+      border: 8px solid transparent;
+      border-bottom: 8px solid #0c0c19;
+      z-index: 2;
+      position: absolute;
+      top: -14px;
+      right: 10px;
+    }
+    &:after {
+      border-bottom-color: #384363;
+      top: -17px;
+      z-index: 1;
+    }
+
+    .username {
+      font-size: 11px;
+    }
 
     ul {
       padding: 0;
-      margin: .7em;
+      margin: 0;
     }
 
     li {
@@ -22,12 +84,35 @@
       padding: 0;
       text-indent: 0;
       list-style-type: none;
-      line-height: 1.5em;
 
       a {
         width: 100%;
         color: #727d9f;
+        display: block;
+        position: relative;
+
+        &:hover {
+          text-decoration: none;
+          color: #fff;
+        }
+
+        i {
+          position: absolute;
+          right: -8px;
+          top: 2px;
+        }
       }
     }
   }
+}
+
+@keyframes hidethis {
+  to {
+    opacity: 0;
+    overflow:hidden;
+  }
+}
+@keyframes shine {
+  from { box-shadow: none;  }
+  to { box-shadow: 0px 0px 10px #007bff; }
 }
