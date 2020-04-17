@@ -12,6 +12,26 @@ class Application extends Component {
     this.state = {users: []};
 
     this.chatRef = React.createRef();
+    this.userUpdated = this.userUpdated.bind(this);
+  }
+
+
+  userUpdated(user) {
+    // Replace old user with new one
+    let users = this.state.users;
+    let pos = _.findIndex(users, u => u.id === user.id);
+    if(pos >= 0) {
+      users[pos] = user;
+    }
+
+    // Update messages' users
+    _.each(this.state.messages, msg => {
+      if(msg.user.id === user.id) {
+        msg.user = user;
+      }
+    });
+
+    this.setState({users, messages: this.state.messages})
   }
 
   componentDidMount() {
@@ -63,6 +83,8 @@ class Application extends Component {
           }
         }, 0)
       });
+
+      client.service('users').on('updated', this.userUpdated);
     });
 
     // On logout reset all all local state (which will then show the login screen)

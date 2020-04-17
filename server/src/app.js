@@ -16,6 +16,8 @@ const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
 
+const inMemoryAvatar = require('./services/avatars/InMemoryAvatar');
+
 const authentication = require('./authentication');
 
 const app = express(feathers());
@@ -32,6 +34,25 @@ app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
 app.use('/', express.static(app.get('public')+'/ui/'));
 app.use('/', express.static(app.get('public')));
+
+app.get('/avatars/:id', (req, res) => {
+  const imgId = req.params.id;
+
+  const avatar = inMemoryAvatar.get(imgId);
+
+  if(avatar) {
+    const {contentType, dataBytes} = avatar;
+
+    res.writeHead(200, {
+      'Cache-Control': 'public, max-age=31557600',
+      'Content-Type': contentType,
+      'Content-Length': dataBytes.length
+    });
+    res.end(dataBytes);
+  } else {
+    res.send(404);
+  }
+});
 
 app.get('/agenda', (req, res) => {
   res.redirect(307, 'https://teamup.com/ks4u2t8nt87a8m2baw');
