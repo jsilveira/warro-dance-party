@@ -6,11 +6,6 @@ const uuid = require('uuid');
 
 const inMemoryAvatar = require('../avatars/InMemoryAvatar');
 
-// The Gravatar image service
-const gravatarUrl = 'https://s.gravatar.com/avatar';
-// The size query. Our chat needs 60px images
-const query = 's=60&d=blank';
-
 exports.Users = class Users extends Service {
   async create (data, params) {
     // This is the information we want from the user signup data
@@ -18,13 +13,11 @@ exports.Users = class Users extends Service {
     // Gravatar uses MD5 hashes from an email address (all lowercase) to get the image
     const hash = crypto.createHash('md5').update(email.toLowerCase()).digest('hex');
     // The full avatar URL
-    const avatar = `${gravatarUrl}/${hash}?${query}`;
     // The complete user
     const userData = {
       email,
       password,
       githubId,
-      avatar,
       id: uuid.v4()
     };
 

@@ -44,6 +44,7 @@ function cropImage(url, width, height) {
       const sHeight = height / scale;
       const sx = (img.width - sWidth) / 2;
       const sy = (img.height - sHeight) / 2;
+      ctx.imageSmoothingQuality = "high";
       ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, width, height);
       const jpegURL = canvas.toDataURL('image/jpeg');
       resolve(jpegURL);
@@ -51,6 +52,8 @@ function cropImage(url, width, height) {
     img.src = url;
   });
 }
+
+const TOOTLTIP_KEY_CHANGE_AVATAR = 'tooltipChangeAvatar';
 
 export class UserSettings extends Component {
   constructor(props) {
@@ -63,12 +66,12 @@ export class UserSettings extends Component {
     this.showMenu = this.showMenu.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
     this.onAuthenticated = this.onAuthenticated.bind(this);
-
-    var newfeat = localStorage.getItem('newfeat');
+    
+    var newfeat = localStorage.getItem(TOOTLTIP_KEY_CHANGE_AVATAR);
     if (newfeat== null) {
-      localStorage.setItem('newfeat', 1);
+      localStorage.setItem(TOOTLTIP_KEY_CHANGE_AVATAR, 1);
     } else {
-      localStorage.setItem('newfeat', 0);
+      localStorage.setItem(TOOTLTIP_KEY_CHANGE_AVATAR, 0);
     }
   }
 
@@ -91,7 +94,7 @@ export class UserSettings extends Component {
   }
 
   closeMenu() {
-    localStorage.setItem('newfeat', 0);
+    localStorage.setItem(TOOTLTIP_KEY_CHANGE_AVATAR, 0);
     this.setState({showMenu: false}, () => document.removeEventListener('click', this.closeMenu));
   }
 
@@ -111,32 +114,45 @@ export class UserSettings extends Component {
 
     getImageFile()
       .then(getFileDataURL)
-      .then(url => cropImage(url, 60, 60))
+      .then(url => {
+        this.setState({uploading: true});
+        return cropImage(url, 100, 100);
+      })
       .then(async url => {
         const user = this.props.user;
-        await client.service('users').update(user.id, {imageData: url});
-        localStorage.setItem('avatarBase64Data', url);
+        try {
+          await client.service('users').update(user.id, {imageData: url});
+          localStorage.setItem('avatarBase64Data', url);
+        } catch(err) {
+          console.error(err);
+        }
+        this.setState({uploading: false});
       });
   }
 
   render() {
     let user = this.props.user;
 
+    let tooltipCambiaTufoto = <div className={this.state.showMenu ? 'new-stuff hide' : 'new-stuff'}>¡Ahora podés cambiar tu nombre y foto!</div>;
+
     return (user ? (
       <div className="UserSettings">
         <a href="#" onClick={this.showMenu}>
           <Avatar user={user}/>
-          {localStorage.getItem('newfeat') == 1 ? <div className={this.state.showMenu ? 'new-stuff hide' : 'new-stuff'}>¡Ahora podés cambiar tu nombre y foto!</div> : null}
+          {localStorage.getItem(TOOTLTIP_KEY_CHANGE_AVATAR) == 1 ? tooltipCambiaTufoto : null}
         </a>
         {this.state.showMenu ? (
           <div className="menu">
-            <div className={'username'} style={{color: Avatar.getUserColor(user.id)}}>
+            <div className={'username text-uppercase'} style={{color: Avatar.getUserColor(user.id)}}>
               ¡Hola {user.email}!
             </div>
-            <ul>
+
+            <ul className={'text-uppercase'}>
               <li><a href="#" onClick={this.changeName.bind(this)}>Cambiar nombre <i className={'material-icons'}>chevron_right</i></a></li>
               <li><a href="#" onClick={this.changeAvatar.bind(this)}>Cambiar foto <i className={'material-icons'}>chevron_right</i></a></li>
             </ul>
+
+            { this.state.uploading ? <div className={'mt-2 text-primary small text-center'}>Subiendo foto...</div> : null }
           </div>
         ) : null}
       </div>
