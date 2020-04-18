@@ -418,10 +418,6 @@ class Chat extends Component {
 
         <div className={'text-center mr-2 date-bar'}>
           {sameUser ? null : <Avatar user={message.user}/>}
-
-          <div className="sent-date">
-            {skipTime ? null : moment(message.createdAt).format('hh:mm')}
-          </div>
         </div>
 
         <div>
@@ -433,6 +429,10 @@ class Chat extends Component {
             <div className="message-content font-300">
               <Linkify componentDecorator={chatLinksComponent}>
                 {message.text}</Linkify>
+            </div>
+
+            <div className="sent-date">
+              {moment(message.createdAt).format('hh:mm')}
             </div>
           </div>
         </div>

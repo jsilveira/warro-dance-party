@@ -527,6 +527,7 @@ html, body, body > div {
     .avatar {
       width: 40px;
       height: 40px;
+      margin-top: 3px;
 
       .round-avatar {
         width: 40px;
@@ -550,18 +551,35 @@ html, body, body > div {
 
       .message-wrapper {
         display: inline-block;
-        background: #38436390;
+        background: #38436345;
         border-radius: 20px;
-        padding: .5em 1em .5em 1em;
+        padding: .5em .75em .35em .75em;
         line-height: 1em;
         margin-right: 3em;
         &.mentions-me {
-          box-shadow: 0 0 3px 2px #2175ff;
+          background: #384363;
+          &:after {
+            content: "";
+            color: #fff;
+            display: block;
+            position: absolute;
+            top: 50%;
+            margin-top: -4px;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            text-align: center;
+            border-radius: 50%;
+            background: #2175FF;
+          }
         }
       }
 
       &.message-continue {
         margin-top: 3px;
+        .message-wrapper {
+          padding-top: .6em;
+        }
 
         .date-bar {
           margin-top: 0.4em;
@@ -573,22 +591,22 @@ html, body, body > div {
         flex-direction: row-reverse !important;
 
         .date-bar {
-          margin-right: 1em !important;
-          min-width: 0px;
-          margin-left: 0.5em;
+          display: none;
           .avatar {
             display: none;
           }
         }
+        &.message-continue { padding-right: 0 !important; }
 
         .message-wrapper {
           background-color: rgba(33, 117, 255, 0.49);
           margin-left: 3em;
-          margin-right: 1em;
+          margin-right: 0;
+          padding-top: .6em;
         }
 
         .message-header {
-          //display: none;
+          display: none;
         }
       }
 
@@ -596,6 +614,7 @@ html, body, body > div {
         font-size: 13px;
         word-break: break-word;
         color: #C1CAE1;
+        display: inline;
       }
 
       .avatar {
@@ -616,10 +635,14 @@ html, body, body > div {
         margin-top: 2px;
         font-size: 10px;
         color: #C1CAE140;
-        position: absolute;
-        top: 50%;
-        margin-top: -5px;
-        right: 0;
+        display: inline;
+        margin-top: 5px;
+        margin-left: 5px;
+        float: right;
+        //position: absolute;
+        //top: 50%;
+        //margin-top: -5px;
+        //right: 0;
       }
     }
     .text-time {
@@ -820,10 +843,6 @@ html, body, body > div {
       }
     }
 
-    .action-header {
-      display: none;
-    }
-
     .logo-container {
       grid-column-start: 1;
       grid-column-end: 2;
@@ -931,6 +950,7 @@ html, body, body > div {
         .player-info {
           padding-left: 0px;
           text-align: center;
+          height: auto;
           .host-name {
             font-size: 20px;
             font-weight: 600;

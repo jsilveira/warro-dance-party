@@ -6,7 +6,6 @@ import {UserSettings} from './UserSettings';
 const uniqueCacheBuster = new Date().valueOf();
 const url = "https://warro.online/radio/8000/radio.mp3?"+uniqueCacheBuster;
 
-
 export default class Player extends Component {
   constructor(props) {
     super(props);

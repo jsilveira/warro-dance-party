@@ -61,10 +61,13 @@ export class UserSettings extends Component {
 
     this.state = {
       showMenu: false,
+      showMobileMenu: false,
     };
 
     this.showMenu = this.showMenu.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
+    this.showMobileMenu = this.showMobileMenu.bind(this);
+    this.closeMobileMenu = this.closeMobileMenu.bind(this);
     this.onAuthenticated = this.onAuthenticated.bind(this);
     
     var newfeat = localStorage.getItem(TOOTLTIP_KEY_CHANGE_AVATAR);
@@ -96,6 +99,17 @@ export class UserSettings extends Component {
   closeMenu() {
     localStorage.setItem(TOOTLTIP_KEY_CHANGE_AVATAR, 0);
     this.setState({showMenu: false}, () => document.removeEventListener('click', this.closeMenu));
+  }
+
+  showMobileMenu(event) {
+    event.preventDefault();
+
+    this.setState({showMobileMenu: true}, () => document.addEventListener('click', this.closeMobileMenu));
+  }
+
+  closeMobileMenu() {
+    localStorage.setItem(TOOTLTIP_KEY_CHANGE_AVATAR, 0);
+    this.setState({showMobileMenu: false}, () => document.removeEventListener('click', this.closeMobileMenu));
   }
 
   async changeName(event) {
@@ -137,7 +151,7 @@ export class UserSettings extends Component {
 
     return (user ? (
       <div className="UserSettings">
-        <a href="#" onClick={this.showMenu}>
+        <a href="#" onClick={this.showMenu} className={'menu-toggle'}>
           <Avatar user={user}/>
           {localStorage.getItem(TOOTLTIP_KEY_CHANGE_AVATAR) == 1 ? tooltipCambiaTufoto : null}
         </a>
@@ -155,6 +169,25 @@ export class UserSettings extends Component {
             { this.state.uploading ? <div className={'mt-2 text-primary small text-center'}>Subiendo foto...</div> : null }
           </div>
         ) : null}
+
+        <div className={'mobileNav'}>
+          <a href="#" onClick={this.showMobileMenu} className={'menu-toggle-mobile'}><i class="material-icons">more_vert</i></a>
+          {this.state.showMobileMenu ? (
+          <div className="menu">
+            <div className={'username text-uppercase'} style={{color: Avatar.getUserColor(user.id)}}>
+              ¡Hola {user.email}!
+            </div>
+
+            <ul className={'text-uppercase'}>
+              <li><a href="#" onClick={this.changeName.bind(this)}>Cambiar nombre <i className={'material-icons'}>chevron_right</i></a></li>
+              <li><a href="#" onClick={this.changeAvatar.bind(this)}>Cambiar foto <i className={'material-icons'}>chevron_right</i></a></li>
+              <li className={'sep'}><a href="/agenda" target={'_blank'}>Ver agenda <i className={'material-icons'}>chevron_right</i></a></li>
+            </ul>
+
+            { this.state.uploading ? <div className={'mt-2 text-primary small text-center'}>Subiendo foto...</div> : null }
+          </div>
+        ) : null}
+        </div>
       </div>
     ) : null);
   }
