@@ -29,7 +29,10 @@ class Chat extends Component {
     };
 
     this.scrollToBottomWithDelay = (... args) => setTimeout(() => this.scrollToBottomOnMessage(... args), 5);
+    this.onAuthenticated = this.onAuthenticated.bind(this);
   }
+
+  onAuthenticated({user}) { this.setState({user}); }
 
   sendMessage(text) {
     if (text) {
@@ -81,12 +84,14 @@ class Chat extends Component {
 
   componentDidMount() {
     client.service('messages').on('created', this.scrollToBottomWithDelay);
+    client.on("authenticated", this.onAuthenticated);
     this.scrollToBottom();
   }
 
   componentWillUnmount() {
     // Clean up listeners
     client.service('messages').removeListener('created', this.scrollToBottomWithDelay);
+    client.off("authenticated", this.onAuthenticated);
   }
 
   keyPressedHandler(keyEvent) {
@@ -391,6 +396,18 @@ class Chat extends Component {
     return res;
   }
 
+  mentionsMe(text) {
+    if (!this.state.user) {
+      return false;
+    }
+    const name = (this.state.user.email || "").split("@")[0].toLowerCase();
+    if (name.length === 0) {
+      return false;
+    }
+    const nameRegex = new RegExp(name.replace(/[.\s_]+/, "[^\w]+"));
+    return nameRegex.test(text.toLowerCase());
+  }
+
   renderMessage(message, sameUser = false, skipTime = false) {
     let isAllEmojis = findEmojis(message.text).join('') === message.text;
 
@@ -406,7 +423,7 @@ class Chat extends Component {
         </div>
 
         <div>
-          <div className="message-wrapper">
+          <div className={"message-wrapper" + (this.mentionsMe(message.text)? " mentions-me" : "")}>
             {sameUser ? null : <div className="message-header">
               <span className="username" style={{color: `${Avatar.getUserColor(message.user.id)}`}}>{name(message.user)}</span>
             </div>}
