@@ -172,11 +172,12 @@ class Chat extends Component {
       let userSearch = [];
       for (let i = 0; i < users.length; i++) {
         const user = users[i];
-        if (user.email.toLowerCase() == prefix.toLowerCase()) {
-          exactUserMatch = user.email;
+        const name = user.email.split("@")[0];
+        if (name.toLowerCase() == prefix.toLowerCase()) {
+          exactUserMatch = name;
         }
-        if (user.email.toLowerCase().startsWith(prefix.toLowerCase())) {
-          userSearch.push(user.email);
+        if (name.toLowerCase().startsWith(prefix.toLowerCase())) {
+          userSearch.push(name);
         }
       }
       userSearch.sort((a, b) => a.length - b.length);
