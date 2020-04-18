@@ -401,17 +401,45 @@ class Chat extends Component {
     return res;
   }
 
-  mentionsMe(text) {
+  mentionRegex() {
     if (!this.props.user) {
+      return null;
+    }
+    const mentionName = removeDiacritics(name(this.props.user));
+    return new RegExp(`(\\b|@)${_.escapeRegExp(mentionName)}\\b`, 'i');
+  }
+
+  mentionsMe(user, text) {
+    const mentionRegex = this.mentionRegex();
+    if (!mentionRegex) {
       return false;
     }
+    if (user.id === this.props.user.id) {
+      return false;
+    }
+    return mentionRegex.test(removeDiacritics(text));
+  }
 
-    const mentionName = removeDiacritics(name(this.props.user));
-    const normalizedText = removeDiacritics(text);
-
-    return mentionName &&
-           new RegExp(`\\b${_.escapeRegExp(mentionName)}\\b`, 'i')
-               .test(normalizedText);
+  addMentionSpan(user, text) {
+    const mentionRegex = this.mentionRegex();
+    if (!mentionRegex) {
+      return text;
+    }
+    if (user.id === this.props.user.id) {
+      return text;
+    }
+    const match = mentionRegex.exec(removeDiacritics(text));
+    if (!match) {
+      return text;
+    }
+    window.match = match;
+    return (
+      <span>
+      <span>{text.substring(0, match.index)}</span>
+      <span className="mention-span">{text.substring(match.index, match.index + match[0].length)}</span>
+      <span>{text.substring(match.index + match[0].length)}</span>
+      </span>
+    );
   }
 
   renderMessage(message, sameUser = false, skipTime = false) {
@@ -436,14 +464,14 @@ class Chat extends Component {
         </div>
 
         <div>
-          <div className={"message-wrapper" + (this.mentionsMe(message.text)? " mentions-me" : "")}>
+          <div className={"message-wrapper" + (this.mentionsMe(message.user, message.text)? " mentions-me" : "")}>
             {sameUser ? null : <div className="message-header">
               <span className="username" style={{color: `${Avatar.getUserColor(message.user.id)}`}}>{name(message.user)}</span>
             </div>}
 
             <div className="message-content font-300">
               <Linkify componentDecorator={chatLinksComponent}>
-                {message.text}</Linkify>
+                {this.addMentionSpan(message.user, message.text)}</Linkify>
             </div>
 
             <div className="sent-date">
