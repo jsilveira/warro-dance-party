@@ -20,6 +20,10 @@ const chatLinksComponent = (href, text, key) => (
 
 const emojiPinia = "🤜";
 
+function removeDiacritics(str) {
+  return unorm.nfd(str || "").replace(/[\u0300-\u036f]/g, "");
+}
+
 class Chat extends Component {
   constructor(props) {
     super(props)
@@ -170,8 +174,16 @@ class Chat extends Component {
       // User search.
       let users = this.props.users;
 
-      let userSearch = _.filter(users, user => name(user).toLowerCase().startsWith(prefix.toLowerCase()));
+      let userSearch = _.filter(
+          users, user => removeDiacritics(name(user))
+                             .toLowerCase()
+                             .includes(removeDiacritics(prefix).toLowerCase()));
       userSearch = _.sortBy(userSearch, user => name(user).length);
+      userSearch = _.sortBy(
+          userSearch,
+          user => !removeDiacritics(name(user))
+                       .toLowerCase()
+                       .startsWith(removeDiacritics(prefix).toLowerCase()));
 
       if (userSearch.length) {
         this.setState({
@@ -180,11 +192,10 @@ class Chat extends Component {
           autocompleteNext : (userSearch.length > 0) ? 1 : 0
         })
       } else {
-        this.setState({autocomplete: null})
+        this.setState({autocomplete : null})
       }
     } else {
-      this.setState({autocomplete: null})
-
+      this.setState({autocomplete : null})
     }
 
     this.setState({message: text})
@@ -395,9 +406,8 @@ class Chat extends Component {
       return false;
     }
 
-    const mentionName =
-        unorm.nfd(name(this.props.user)).replace(/[\u0300-\u036f]/g, "");
-    const normalizedText = unorm.nfd(text).replace(/[\u0300-\u036f]/g, "");
+    const mentionName = removeDiacritics(name(this.props.user));
+    const normalizedText = removeDiacritics(text);
 
     return mentionName &&
            new RegExp(`\\b${_.escapeRegExp(mentionName)}\\b`, 'i')
