@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import unorm from 'unorm';
 import moment from 'moment';
 import React, {Component} from 'react';
 import Linkify from 'react-linkify';
@@ -394,9 +395,13 @@ class Chat extends Component {
       return false;
     }
 
-    const mentionName = name(this.props.user);
+    const mentionName =
+        unorm.nfd(name(this.props.user)).replace(/[\u0300-\u036f]/g, "");
+    const normalizedText = unorm.nfd(text).replace(/[\u0300-\u036f]/g, "");
 
-    return mentionName && new RegExp(`@${_.escapeRegExp(mentionName)}\\b`, 'i').test(text);
+    return mentionName &&
+           new RegExp(`\\b${_.escapeRegExp(mentionName)}\\b`, 'i')
+               .test(normalizedText);
   }
 
   renderMessage(message, sameUser = false, skipTime = false) {
