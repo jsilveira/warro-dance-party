@@ -9,7 +9,7 @@ import {emojis, findEmojis} from './../../server/src/emojis';
 import Avatar from "./avatar";
 import OnlineUsersWithReactions from "./OnlineUsersWithReactions";
 
-const name = (user) => user.email.split('@')[0]
+const name = (user) => (user.email || "").split('@')[0]
 
 const chatLinksComponent = (href, text, key) => (
   <a href={href} key={key} target="_blank">
@@ -102,15 +102,15 @@ class Chat extends Component {
       keyEvent.preventDefault();
       if (autocompleteType !== "user") {
         this.sendMessage();
-      };
-      if (autocomplete && autocomplete.length && autocompleteType == "user") {
+      }
+      if (autocomplete && autocomplete.length && autocompleteType === "user") {
         const selected = autocompleteNext > 0
                              ? (autocompleteNext - 1) % autocomplete.length
                              : autocomplete.length - 1;
         let msg = this.state.message || "";
         let [, prefix] = msg.match(/@([^@]+)$/) || [];
         if (prefix) {
-          msg = msg.replace(/@([^@]+)$/, "@" + autocomplete[selected] + " ");
+          msg = msg.replace(/@([^@]+)$/, "@" + name(autocomplete[selected]) + " ");
           this.setState({
             message: msg,
             autocompleteType : null,
@@ -147,7 +147,7 @@ class Chat extends Component {
   inputChange(text) {
     let [,type,prefix] = text.match(/([:@])([\w_]+)$/) || [];
 
-    if (type == ":" && prefix) {
+    if (type === ":" && prefix) {
       // Emoji search.
       let exactEmojiMatch = emojis[prefix];
       if (exactEmojiMatch) {
@@ -165,22 +165,13 @@ class Chat extends Component {
       } else {
         this.setState({autocomplete: null})
       }
-    } else if (type == "@" && prefix) {
+    } else if (type === "@" && prefix) {
       // User search.
-      let {users} = this.props;
-      let exactUserMatch = null;
-      let userSearch = [];
-      for (let i = 0; i < users.length; i++) {
-        const user = users[i];
-        const name = user.email.split("@")[0];
-        if (name.toLowerCase() == prefix.toLowerCase()) {
-          exactUserMatch = name;
-        }
-        if (name.toLowerCase().startsWith(prefix.toLowerCase())) {
-          userSearch.push(name);
-        }
-      }
-      userSearch.sort((a, b) => a.length - b.length);
+      let users = this.props.users;
+
+      let userSearch = _.filter(users, user => name(user).toLowerCase().startsWith(prefix.toLowerCase()));
+      userSearch = _.sortBy(userSearch, user => name(user).length);
+
       if (userSearch.length) {
         this.setState({
           autocompleteType : "user",
@@ -236,7 +227,7 @@ class Chat extends Component {
     let [, prefix] = msg.match(/@([^@]+)$/) || [];
 
     if (prefix) {
-      msg = msg.replace(/@[^@]+$/, "@" + user + " ");
+      msg = msg.replace(/@[^@]+$/, "@" + name(user) + " ");
     }
     this.setState({message : msg})
   }
@@ -262,12 +253,13 @@ class Chat extends Component {
         return <div className={'autocomplete rounded p-2 shadow-sm mb-2 mr-4'}>
           <div className={'small mb-2'}>Press <span className={'key'}>TAB</span> for:</div>
           {
-            _.map(autocomplete.slice(0, 15), (user,i) => <span
-              className={'p-1 '+(autocompleteNext == (i+1) % autocomplete.length ? 'bg-primary rounded' : '')}
-              key={user}
+            _.map(autocomplete.slice(0, 15), (user, i) => <span
+              style={{color: Avatar.getUserColor(user.id)}}
+              className={'p-1 user-mention ' + (autocompleteNext == (i + 1) % autocomplete.length ? 'bg-primary rounded' : '')}
+              key={user.id}
               onClick={(() => this.selectUser(user))}
-              title={user}>
-            {user}
+              title={user.email}>
+            {name(user)}
           </span>)
           }
           {autocomplete.length > 15 ? <span className={'small'}>... and {autocomplete.length} more</span> : null}
@@ -398,22 +390,31 @@ class Chat extends Component {
   }
 
   mentionsMe(text) {
-    if (!this.state.user) {
+    if (!this.props.user) {
       return false;
     }
-    const name = (this.state.user.email || "").split("@")[0].toLowerCase();
-    if (name.length === 0) {
-      return false;
-    }
-    const nameRegex = new RegExp(name.replace(/[.\s_]+/, "[^\w]+"));
-    return nameRegex.test(text.toLowerCase());
+
+    const mentionName = name(this.props.user);
+
+    return mentionName && new RegExp(`@${_.escapeRegExp(mentionName)}\\b`, 'i').test(text);
   }
 
   renderMessage(message, sameUser = false, skipTime = false) {
     let isAllEmojis = findEmojis(message.text).join('') === message.text;
 
+    let extraClasses = [];
+
+    if(sameUser)
+      extraClasses.push('message-continue', 'pt-0', 'pr-1');
+    else
+      extraClasses.push('p-0');
+
+    if(this.props.user && message.user.id === this.props.user.id) {
+      extraClasses.push('my-message')
+    }
+
     if (message.text.length > 1 && !isAllEmojis) {
-      return <div key={message.id} className={"message d-flex flex-row "+(sameUser ? 'message-continue pt-0 pr-1' : 'p-0')}>
+      return <div key={message.id} className={"message d-flex flex-row "+extraClasses.join(' ')}>
 
         <div className={'text-center mr-2 date-bar'}>
           {sameUser ? null : <Avatar user={message.user}/>}
