@@ -90,11 +90,30 @@ class Chat extends Component {
   }
 
   keyPressedHandler(keyEvent) {
+    let autocomplete = this.state.autocomplete;
+    let autocompleteNext = this.state.autocompleteNext;
+    let autocompleteType = this.state.autocompleteType;
     if (keyEvent.key === "Enter") {
-      this.sendMessage()
+      keyEvent.preventDefault();
+      if (autocompleteType !== "user") {
+        this.sendMessage();
+      };
+      if (autocomplete && autocomplete.length && autocompleteType == "user") {
+        const selected = autocompleteNext > 0
+                             ? (autocompleteNext - 1) % autocomplete.length
+                             : autocomplete.length - 1;
+        let msg = this.state.message || "";
+        let [, prefix] = msg.match(/@([^@]+)$/) || [];
+        if (prefix) {
+          msg = msg.replace(/@([^@]+)$/, "@" + autocomplete[selected] + " ");
+          this.setState({
+            message: msg,
+            autocompleteType : null,
+            autocomplete : null,
+          });
+        }
+      }
     } else if (keyEvent.key === "Tab") {
-      let autocomplete = this.state.autocomplete;
-      let nextEmoji = this.state.nextEmoji;
 
       if (autocomplete && autocomplete.length) {
         let msg = this.state.message || "";
@@ -104,9 +123,15 @@ class Chat extends Component {
         if (prefix) {
           msg = msg.replace(/:[\w_]+$/, emojis[autocomplete[0]]);
         } else {
-          msg = msg.replace(emojis[autocomplete[nextEmoji ? (nextEmoji-1) : autocomplete.length - 1]], emojis[autocomplete[nextEmoji]])
+          msg = msg.replace(
+              emojis[autocomplete[autocompleteNext ? (autocompleteNext - 1)
+                                                   : autocomplete.length - 1]],
+              emojis[autocomplete[autocompleteNext]])
         }
-        this.setState({nextEmoji: (nextEmoji + 1) % autocomplete.length, message: msg})
+        this.setState({
+          autocompleteNext : (autocompleteNext + 1) % autocomplete.length,
+          message : msg
+        })
       }
 
 
@@ -115,9 +140,10 @@ class Chat extends Component {
   }
 
   inputChange(text) {
-    let [,prefix] = text.match(/:([\w_]+)$/) || [];
+    let [,type,prefix] = text.match(/([:@])([\w_]+)$/) || [];
 
-    if (prefix) {
+    if (type == ":" && prefix) {
+      // Emoji search.
       let exactEmojiMatch = emojis[prefix];
       if (exactEmojiMatch) {
         text = text.replace(/:([\w_]+)$/, exactEmojiMatch);
@@ -126,7 +152,35 @@ class Chat extends Component {
       let emojiSearch = this.emojiCandidates(prefix);
 
       if (emojiSearch.length) {
-        this.setState({autocomplete: emojiSearch, nextEmoji: (exactEmojiMatch && emojiSearch.length > 1) ? 1 : 0})
+        this.setState({
+          autocompleteType : "emoji",
+          autocomplete : emojiSearch,
+          autocompleteNext : (exactEmojiMatch && emojiSearch.length > 1) ? 1 : 0
+        })
+      } else {
+        this.setState({autocomplete: null})
+      }
+    } else if (type == "@" && prefix) {
+      // User search.
+      let {users} = this.props;
+      let exactUserMatch = null;
+      let userSearch = [];
+      for (let i = 0; i < users.length; i++) {
+        const user = users[i];
+        if (user.email.toLowerCase() == prefix.toLowerCase()) {
+          exactUserMatch = user.email;
+        }
+        if (user.email.toLowerCase().startsWith(prefix.toLowerCase())) {
+          userSearch.push(user.email);
+        }
+      }
+      userSearch.sort((a, b) => a.length - b.length);
+      if (userSearch.length) {
+        this.setState({
+          autocompleteType : "user",
+          autocomplete : userSearch,
+          autocompleteNext : (userSearch.length > 0) ? 1 : 0
+        })
       } else {
         this.setState({autocomplete: null})
       }
@@ -171,22 +225,48 @@ class Chat extends Component {
     this.setState({message: msg})
   }
 
+  selectUser(user) {
+    let msg = this.state.message;
+    let [, prefix] = msg.match(/@([^@]+)$/) || [];
+
+    if (prefix) {
+      msg = msg.replace(/@[^@]+$/, "@" + user + " ");
+    }
+    this.setState({message : msg})
+  }
+
   renderSuggestions() {
-    const {autocomplete, nextEmoji} = this.state;
+    const {autocompleteType, autocomplete, autocompleteNext} = this.state;
     if (autocomplete) {
-      return <div className={'autocomplete rounded p-2 shadow-sm mb-2 mr-4'}>
-        <div className={'small mb-2'}>Press <span className={'key'}>TAB</span> for:</div>
-        {
-          _.map(autocomplete.slice(0, 15), (emojiName,i) => <span
-            className={'emoji p-1 text-lg '+(nextEmoji == (i+1) ? 'bg-primary rounded' : '')}
-            key={emojiName}
-            onClick={(() => this.selectEmoji(emojis[emojiName]))}
-            title={emojiName}>
-          {emojis[emojiName]}
-        </span>)
-        }
-        {autocomplete.length > 15 ? <span className={'small'}>... and {autocomplete.length} more</span> : null}
-      </div>
+      if (autocompleteType === "emoji") {
+        return <div className={'autocomplete rounded p-2 shadow-sm mb-2 mr-4'}>
+          <div className={'small mb-2'}>Press <span className={'key'}>TAB</span> for:</div>
+          {
+            _.map(autocomplete.slice(0, 15), (emojiName,i) => <span
+              className={'emoji p-1 text-lg '+(autocompleteNext == (i+1) ? 'bg-primary rounded' : '')}
+              key={emojiName}
+              onClick={(() => this.selectEmoji(emojis[emojiName]))}
+              title={emojiName}>
+            {emojis[emojiName]}
+          </span>)
+          }
+          {autocomplete.length > 15 ? <span className={'small'}>... and {autocomplete.length} more</span> : null}
+        </div>
+      } else if (autocompleteType === "user") {
+        return <div className={'autocomplete rounded p-2 shadow-sm mb-2 mr-4'}>
+          <div className={'small mb-2'}>Press <span className={'key'}>TAB</span> for:</div>
+          {
+            _.map(autocomplete.slice(0, 15), (user,i) => <span
+              className={'p-1 '+(autocompleteNext == (i+1) % autocomplete.length ? 'bg-primary rounded' : '')}
+              key={user}
+              onClick={(() => this.selectUser(user))}
+              title={user}>
+            {user}
+          </span>)
+          }
+          {autocomplete.length > 15 ? <span className={'small'}>... and {autocomplete.length} more</span> : null}
+        </div>
+      }
     } else {
       return null;
     }
