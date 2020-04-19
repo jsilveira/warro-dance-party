@@ -8,8 +8,80 @@ html, body, body > div {
 }
 
 @mobile-width: 768px;
-//@bgChat: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 30%);
 @bgChat: rgba(0,0,0,0.0);
+
+
+@layoutChatWidth: 450px;
+
+@layoutPlayerHeight: 100px;
+@layoutPlayerHeightMobile: 56px;
+
+@layoutSendMessageHeight: 90px;
+@layoutSendMessageHeightMobile: 86px;
+
+@zoomMobileMandala: 0.4;
+
+.positionPlayer() {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: @layoutPlayerHeight;
+
+  @media(max-width: @mobile-width) {
+    height: @layoutPlayerHeightMobile;
+  }
+}
+
+.positionMandala() {
+  position: fixed;
+  left: 0;
+  right: @layoutChatWidth;
+  top: @layoutPlayerHeight;
+  bottom: 0;
+  z-index: -1;
+
+  @media(max-width: @mobile-width) {
+    top: @layoutPlayerHeightMobile/@zoomMobileMandala; // Account for zoom, as top will also shrink
+    right: 0;
+    bottom: 52%;
+  }
+
+  .user-unknown:not(.user-authenticated) & {
+    right: 0;
+    bottom: 50%;
+  }
+}
+
+.positionChat() {
+  position: fixed;
+  width: @layoutChatWidth;
+  right: 0;
+  top: @layoutPlayerHeight;
+  bottom: @layoutSendMessageHeight;
+
+  @media(max-width: @mobile-width) {
+    left: 0;
+    top: 48%;
+    bottom: @layoutSendMessageHeightMobile;
+    right: 0;
+    width: auto;
+  }
+}
+
+.positionSendMsgBar() {
+  position: fixed;
+  right: 0;
+  width: @layoutChatWidth;
+  height: @layoutSendMessageHeight;
+  bottom: 0;
+
+  @media(max-width: @mobile-width) {
+    height: @layoutSendMessageHeightMobile;
+    width: 100%;
+    left: 0;
+  }
+}
 
 .send-msg-bar input,
 .login input {
@@ -91,17 +163,9 @@ html, body, body > div {
   width: 100%;
   position: fixed;
 
-  grid-template-rows: 100px auto min-content;
-  grid-template-columns: auto 450px;
-
-  display: grid;
-
   .reactions {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 4;
-    position: absolute;
+    .positionMandala();
+    z-index: 999;
 
     .reaction {
       position: fixed;
@@ -124,56 +188,22 @@ html, body, body > div {
         background: transparent;
         color: white;
         animation: zoomEmoji 1.2s 1 linear forwards;
-        //text-shadow: 0px 0px 10px #35cd96, 0px 0px 3px #35cd96;
       }
     }
   }
 
   .player-controls {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 2;
-
-    position: relative;
+    .positionPlayer();
   }
 
   .logo-container {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: 4;
-
-    position: relative;
-  }
-
-  .bg-side {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 3;
-
-    height: 100%;
-    width: 100%;
-    //overflow: hidden;
-    z-index: -1;
-    display: none;
+    .positionMandala();
   }
 
   .online-users{
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: 4;
-    align-self: end;
-    position: relative;
-    overflow: hidden;
-    padding-left: 1.5rem;
-    height: 100%;
-    width: 100%;
+    .positionMandala();
 
-    .many-users .avatar{
-    }
+    overflow: hidden;
   }
 
   .avatar {
@@ -197,9 +227,6 @@ html, body, body > div {
     transform: scale(1);
     &.user-sent-msg {
       animation: avatarWave 0.375s infinite linear alternate-reverse;
-      .round-avatar {
-        //border-color: white !important;
-      }
     }
 
     .round-avatar {
@@ -208,7 +235,6 @@ html, body, body > div {
       height: 50px;
       width: 50px;
       border-radius: 50%;
-      //background: ;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -221,13 +247,11 @@ html, body, body > div {
       font-weight: 300;
       color: white;
       box-sizing: border-box;
-      //text-shadow: 1px 1px 2px black, 0 0 5px black;
 
       .gravatar {
         height: 48px;
         width: 48px;
         border-radius: 25px;
-        //width: 100%;
         top: 0;
         left: 0;
         position: absolute;
@@ -288,24 +312,16 @@ html, body, body > div {
   }
 
   .send-msg-bar {
+    .positionSendMsgBar();
+
     pointer-events: visible;
-
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 3;
-    grid-row-end: 4;
-
     background: @bgChat;
-
     padding: 1.5rem 1.5rem 1.5rem 1.5rem !important;
-
-    position: relative;
   }
 
   .player {
     pointer-events: visible;
     overflow: auto;
-    //box-shadow: 0 0 50px 50px white;
     padding-top: 20px;
     padding-left: 20px;
     padding-right: 20px;
@@ -401,9 +417,6 @@ html, body, body > div {
     width: 240px;
     overflow: auto;
 
-    //mask:url(../public/btn-pause.png);
-    //background: url(../public/doblevreal.svg) no-repeat;
-    //background-position: center center;
     &.clone {
       background: white;
       animation: wave 1s infinite ease-in-out forwards;
@@ -482,8 +495,8 @@ html, body, body > div {
     position: absolute;
     top: 0px;
     right: 0px;
-    width: 450px;
-    height: 100px;
+    width: @layoutChatWidth;
+    height: @layoutPlayerHeight;
     padding: 0 2em;
     display: flex;
     flex-direction: row;
@@ -503,20 +516,15 @@ html, body, body > div {
   }
 
   .chat {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 2;
-    grid-row-end: 3;
-    background: @bgChat;
+    .positionChat();
 
-    position: relative;
+    background: @bgChat;
     overflow-y:auto;
     border-bottom: solid 1px transparent;
     pointer-events: visible;
     will-change: transform;
 
     color: white;
-    //border-radius: 5px;
     font-size: 0.9em;
     padding-bottom: 0 !important;
 
@@ -543,9 +551,6 @@ html, body, body > div {
 
     .message {
       border-radius: 5px;
-      //background: rgba(255, 255, 255, 0.1);
-      //background: rgba(49, 49, 49, 0.5);
-      //border-bottom: solid 1px rgba(0,0,0,0.2);
       margin-top: 0.5rem;
       position: relative;
 
@@ -556,6 +561,7 @@ html, body, body > div {
         padding: .5em .75em .35em .75em;
         line-height: 1em;
         margin-right: 3em;
+
         &.mentions-me {
           background: #384363;
           &:after {
@@ -624,10 +630,8 @@ html, body, body > div {
       .avatar {
         margin-left: 4px;
       }
-      //flex: 0 0 auto;
 
       .username {
-        //font-weight: 700;
         color: #35cd96;
         font-size: 11px;
       }
@@ -636,17 +640,12 @@ html, body, body > div {
         margin: 0px;
       }
       .sent-date {
-        margin-top: 2px;
         font-size: 10px;
         color: #C1CAE140;
         display: inline;
         margin-top: 5px;
         margin-left: 5px;
         float: right;
-        //position: absolute;
-        //top: 50%;
-        //margin-top: -5px;
-        //right: 0;
       }
     }
     .text-time {
@@ -657,13 +656,6 @@ html, body, body > div {
 
 .user-unknown:not(.user-authenticated) {
   .dancefloor {
-    .logo-container {
-      grid-column-end: 3;
-      grid-row-start: 1;
-      .logo {
-        margin-top: -300px;
-      }
-    }
     .action-header {
       position: fixed;
       top: 0;
@@ -752,12 +744,6 @@ html, body, body > div {
     grid-template-columns: 100%;
 
     .reaction {
-      grid-column-start: 1;
-      grid-column-end: 2;
-
-      grid-row-start: 2;
-      grid-row-end: 3;
-
       &.emoji {
         background: transparent;
         color: white;
@@ -848,47 +834,22 @@ html, body, body > div {
     }
 
     .logo-container {
-      grid-column-start: 1;
-      grid-column-end: 2;
-      grid-row-start: 2;
-      grid-row-end: 3;
-
-      zoom: 0.4;
+      zoom: @zoomMobileMandala;
       .logo { margin-top: -120px !important; }
     }
 
     .online-users {
-      grid-column-start: 1;
-      grid-column-end: 2;
-      grid-row-start: 2;
-      grid-row-end: 3;
-      align-self: end;
       padding: 0 5px;
 
-      zoom: 0.4;
+      zoom: @zoomMobileMandala;
       overflow: hidden;
     }
 
-    audio {
-      zoom: 1.7;
-      width: 160px;
-      margin: 2px;
-    }
-
     .send-msg-bar {
-      grid-column-start: 1;
-      grid-column-end: 2;
-      grid-row-start: 4;
-      grid-row-end: 5;
-
       padding: 15px 15px 30px 15px !important;
     }
 
     .chat {
-      grid-column-start: 1;
-      grid-column-end: 2;
-      grid-row-start: 3;
-      grid-row-end: 4;
       padding: 0 15px !important;
     }
   }
@@ -1054,64 +1015,6 @@ html, body, body > div {
 
 .shadow-sm {
   box-shadow: 0 .125rem .25rem rgba(0,0,0,.4)!important;
-}
-
-audio {
-  //background: red;
-  width: 180px;
-  height: 30px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  zoom: 1.3;
-  display: none;
-
-  &:focus {
-    outline: none;
-  }
-  &::-webkit-media-controls {
-
-  }
-  &::-webkit-media-controls-panel {
-    background: #1d1d4a;
-
-    //margin: 5px;
-    //border-radius: 0;
-    //display: none;
-  }
-  &::-webkit-media-controls-mute-button {
-
-  }
-  &::-webkit-media-controls-play-button {
-    color: white;
-    background-color: white;
-    border-radius: 50%;
-    height: 100%;
-  }
-  &::-webkit-media-controls-timeline-container {
-  }
-  &::-webkit-media-controls-current-time-display {
-    //background: green;
-    //border-radius: 50%;
-    //width: 1em;
-    //height: 1em;
-    //color: transparent;
-    //overflow: hidden;
-    display: none;
-  }
-  &::-webkit-media-controls-time-remaining-display {
-    opacity: 0;
-    pointer-events: none;
-  }
-  &::-webkit-media-controls-timeline {
-    opacity: 0;
-    pointer-events: none;
-  }
-  &::-webkit-media-controls-volume-slider-container {
-
-  }
-  &::-webkit-media-controls-volume-slider {
-    background: yellow;
-  }
 }
 
 ::-webkit-scrollbar-track

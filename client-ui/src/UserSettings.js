@@ -171,7 +171,7 @@ export class UserSettings extends Component {
         ) : null}
 
         <div className={'mobileNav'}>
-          <a href="#" onClick={this.showMobileMenu} className={'menu-toggle-mobile'}><i class="material-icons">more_vert</i></a>
+          <a href="#" onClick={this.showMobileMenu} className={'menu-toggle-mobile'}><i className={"material-icons"}>more_vert</i></a>
           {this.state.showMobileMenu ? (
           <div className="menu">
             <div className={'username text-uppercase'} style={{color: Avatar.getUserColor(user.id)}}>

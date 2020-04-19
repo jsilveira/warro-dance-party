@@ -294,9 +294,6 @@ class Chat extends Component {
 
     let lastEmoji = this.state.lastEmoji;
     return <div className="dancefloor">
-
-      <div className={'bg-side'}></div>
-
       <div className="chat px-4 pt-2 pb-4" ref={main => this.chat = main} onScroll={this.handleScroll.bind(this)}>
         <div  className="chat-window">{this.renderMessages(messages)}</div>
       </div>
