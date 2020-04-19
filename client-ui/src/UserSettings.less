@@ -1,3 +1,5 @@
+@mobile-width: 768px;
+
 .UserSettings {
   position: relative;
   > a:hover {
@@ -101,6 +103,57 @@
           right: -8px;
           top: 2px;
         }
+      }
+    }
+  }
+  .mobileNav { display: none; }
+}
+
+@media(max-width: @mobile-width) {
+  .UserSettings {
+    .mobileNav {
+      display: block;
+    }
+  }
+  .dancefloor {
+    .player-controls .volume-slider { display: none; }
+    .action-header {
+      width: 200px;
+      display: block;
+      padding: 0;
+      text-align: right;
+      top: 10px;
+      right: 5px;
+      z-index: 9999;
+      .menu-toggle-mobile {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        line-height: 40px;
+        color: #fff;
+        i {
+          margin-top: 7px;
+        }
+      }
+      .menu {
+        text-align: left;
+        line-height: 2.5em;
+        width: 275px;
+        .username {
+          line-height: 1.5em;
+          margin-bottom: .5em;
+        }
+        .sep {
+          border-top: 1px solid #727d9f50;
+          margin-top: .5em;
+          padding-top: .5em;
+        }
+        li a i { top: 6px; }
+      }
+      > *:not(.UserSettings),
+      .menu-toggle {
+        display: none;
       }
     }
   }
