@@ -206,7 +206,7 @@ class Chat extends Component {
     const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
     if (!bottom && this.state.scrollInBottom) {
       this.setState({scrollInBottom: false})
-    } else if(!this.state.scrollInBottom) {
+    } else if(!this.state.scrollInBottom && bottom) {
       this.setState({scrollInBottom: true})
     }
   }
