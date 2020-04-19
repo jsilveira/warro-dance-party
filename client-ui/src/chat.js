@@ -103,9 +103,10 @@ class Chat extends Component {
     let autocomplete = this.state.autocomplete;
     let autocompleteNext = this.state.autocompleteNext;
     let autocompleteType = this.state.autocompleteType;
+
     if (keyEvent.key === "Enter") {
       keyEvent.preventDefault();
-      if (autocompleteType !== "user") {
+      if (!autocomplete || autocompleteType !== "user") {
         this.sendMessage();
       }
       if (autocomplete && autocomplete.length && autocompleteType === "user") {
