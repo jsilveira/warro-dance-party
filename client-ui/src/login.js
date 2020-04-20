@@ -5,12 +5,10 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
 
-    let lastEmail = localStorage.getItem('email');
-
     this.state = {};
 
-    if(lastEmail) {
-      this.state = {email: lastEmail}
+    if(props.lastEmail) {
+      this.state = {email: props.lastEmail};
     }
   }
 
@@ -20,7 +18,6 @@ export default class Login extends Component {
     }
   }
 
-
   updateField(name, ev) {
     this.setState({ [name]: ev.target.value });
   }
@@ -28,13 +25,14 @@ export default class Login extends Component {
   async login() {
     const { email } = this.state;
 
-    document.body.classList.add('user-authenticated');
-
     try {
       await client.authenticate({
         strategy: 'local',
         email, password: '1234'
       });
+
+      document.body.classList.add('user-authenticated');
+      document.body.classList.remove('user-unknown');
       console.log("Login with user", user)
     } catch(error) {
       this.setState({ error })
@@ -63,17 +61,22 @@ export default class Login extends Component {
   }
 
   render() {
-    document.body.classList.add('user-unknown');
-    return <div className="login">
+    if(!this.props.lastEmail) {
+      return <div className="login">
         <div>
-          <small className="mb-2">¡Sumate al chat, somos un montón! {this.state.error && this.state.error.message}</small>
+          <small className="mb-2">¡Sumate al chat, somos un
+            montón! {this.state.error && this.state.error.message}</small>
           <div className={'field-wrap'}>
-            <input className="form-control" type="email" name="email" placeholder="Ingresá tu nombre para chatear" onChange={ev => this.updateField('email', ev)} />
+            <input className="form-control" type="email" name="email" placeholder="Ingresá tu nombre para chatear"
+                   onChange={ev => this.updateField('email', ev)}/>
             <button className="btn btn-primary btn-send block signup mt-2" onClick={() => this.signup()}>
               <i className={'material-icons'}>chevron_right</i>
             </button>
           </div>
         </div>
-    </div>;
+      </div>;
+    } else {
+      return null;
+    }
   }
 }

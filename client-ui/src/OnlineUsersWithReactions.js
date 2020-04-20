@@ -9,22 +9,67 @@ export default class OnlineUsersWithReactions extends React.Component {
     super(props);
 
     this.state = {
-      userStates: {}
+      userStates: {},
+      users: []
     };
 
     this.reactionsTimeouts = {};
 
     this.areaRef = React.createRef();
     this.handleMsg = this.handleMsg.bind(this);
+    this.userUpdated = this.userUpdated.bind(this);
+    this.onAuthenticated = this.onAuthenticated.bind(this);
+  }
+
+  userUpdated(updatedUser) {
+    // Replace old user with new one
+    let users = this.state.users;
+    let pos = _.findIndex(users, u => u.id === updatedUser.id);
+    if(pos >= 0) {
+      users[pos] = updatedUser;
+    }
+
+    this.setState({users})
+  }
+
+  async onAuthenticated({user}) {
+    const room = client.service('room');
+
+    client.service('messages').on('created', this.handleMsg);
+    client.service('users').on('updated', this.userUpdated);
+
+    // Get all users and messages
+    let users = await room.find();
+
+      // Once both return, update the state
+    this.setState({ users });
+
+    client.service('users').on('updated', this.userUpdated);
+
+    // Add new users to the user list
+    room.on('created', user => {
+      let newUsers = _.unionBy(this.state.users, [user], 'id');
+      this.setState({
+        users: newUsers
+      });
+    });
+
+    room.on('removed', user => {
+      this.setState({
+        users: _.filter(this.state.users, u => user.id !== u.id)
+      });
+    });
   }
 
   componentDidMount() {
-    client.service('messages').on('created', this.handleMsg);
+    client.on("authenticated", this.onAuthenticated);
   }
 
   componentWillUnmount() {
     // Clean up listeners
+    client.off("authenticated", this.onAuthenticated);
     client.service('messages').removeListener('created', this.handleMsg);
+    client.service('users').removeListener('updated', this.userUpdated);
   }
 
   handleMsg({text, userId}) {
@@ -41,7 +86,7 @@ export default class OnlineUsersWithReactions extends React.Component {
   }
 
   getCirclePositionOffsetFromCenter(userIndex) {
-    let total = this.props.users.length;
+    let total = this.state.users.length;
 
     let circleDiameter = 50;
 
@@ -87,7 +132,7 @@ export default class OnlineUsersWithReactions extends React.Component {
 
   getUserPosition(userId) {
     if (this.areaRef.current) {
-      let pos = _.findIndex(this.props.users, u => u.id === userId);
+      let pos = _.findIndex(this.state.users, u => u.id === userId);
 
       let {x, y, width, height, top, right, bottom, left} = this.areaRef.current.getBoundingClientRect();
 
@@ -110,8 +155,7 @@ export default class OnlineUsersWithReactions extends React.Component {
   }
 
   render() {
-    let {users} = this.props;
-    let {userStates} = this.state;
+    let {userStates, users} = this.state;
 
     let userAvatars = users.map((user, i) => {
       return <Avatar user={user} key={user.id} index={i} total={users.length}
