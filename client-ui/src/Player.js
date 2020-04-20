@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import VolumeSlider from "./VolumeSlider";
 import {UserSettings} from './UserSettings';
+import _ from "lodash";
 
 // To ensure each page reload gets a unique new stream url
 const uniqueCacheBuster = new Date().valueOf();
