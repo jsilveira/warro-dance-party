@@ -3,6 +3,7 @@ import _ from 'lodash'
 import Avatar from "./avatar";
 import Reactions from "./reactions";
 import client from "./feathers";
+import SendMsgBar from "./SendMsgBar";
 
 export default class OnlineUsersWithReactions extends React.Component {
   constructor(props) {
@@ -163,10 +164,14 @@ export default class OnlineUsersWithReactions extends React.Component {
                      style={this.getCirclePositionStyle(i)}/>;
     });
 
-    return <div ref={this.areaRef} className={"online-users " + (users.length > 70 ? 'many-users' : '')}>
-      <Reactions getUserPositionStyle={this.getUserPosition.bind(this)}/>
+    return <React.Fragment>
+      <div ref={this.areaRef} className={"online-users " + (users.length > 70 ? 'many-users' : '')}>
+        <Reactions getUserPositionStyle={this.getUserPosition.bind(this)}/>
 
-      {userAvatars}
-    </div>
+        {userAvatars}
+      </div>
+
+      <SendMsgBar users={users}/>
+    </React.Fragment>
   }
 };

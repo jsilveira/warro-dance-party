@@ -50,8 +50,6 @@ class DanceFloor extends Component {
     let res = <div className="dancefloor">
       <ChatConversation user={this.props.user}/>
 
-      <SendMsgBar/>
-
       <div className="player-controls">
         <Player onMetadataUpdate={this.onMetadataUpdate.bind(this)} user={this.props.user}/>
       </div>
