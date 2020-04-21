@@ -13,6 +13,7 @@ export default class OnlineUsersWithReactions extends React.Component {
       userStates: {},
       users: []
     };
+    this.users = [];
 
     this.reactionsTimeouts = {};
 
@@ -20,6 +21,8 @@ export default class OnlineUsersWithReactions extends React.Component {
     this.handleMsg = this.handleMsg.bind(this);
     this.userUpdated = this.userUpdated.bind(this);
     this.onAuthenticated = this.onAuthenticated.bind(this);
+
+    this.updateUsersThrottled = _.throttle(this.updateUsers.bind(this), 500);
   }
 
   userUpdated(updatedUser) {
@@ -44,22 +47,25 @@ export default class OnlineUsersWithReactions extends React.Component {
 
       // Once both return, update the state
     this.setState({ users });
+    this.users = users;
 
     client.service('users').on('updated', this.userUpdated);
 
     // Add new users to the user list
     room.on('created', user => {
-      let newUsers = _.unionBy(this.state.users, [user], 'id');
-      this.setState({
-        users: newUsers
-      });
+      this.users = _.unionBy(this.users, [user], 'id');
+      this.updateUsersThrottled();
     });
 
     room.on('removed', user => {
-      this.setState({
-        users: _.filter(this.state.users, u => user.id !== u.id)
-      });
+      this.users = _.filter(this.users, u => user.id !== u.id);
+      this.updateUsersThrottled();
     });
+  }
+
+
+  updateUsers() {
+    this.setState({users: this.users, userStates: this.state.userStates});
   }
 
   componentDidMount() {
@@ -80,10 +86,11 @@ export default class OnlineUsersWithReactions extends React.Component {
 
     this.reactionsTimeouts[userId] = setTimeout(() => {
       this.state.userStates[userId] = [];
-      this.setState({userStates: this.state.userStates})
+      this.updateUsersThrottled();
     }, 1500);
 
-    this.setState({userStates: this.state.userStates})
+    this.updateUsersThrottled();
+    // this.setState({userStates: this.state.userStates})
   }
 
   getCirclePositionOffsetFromCenter(userIndex) {
@@ -96,7 +103,9 @@ export default class OnlineUsersWithReactions extends React.Component {
       [17, 210], // Row 1
       [23, 270], // Row 2
       [31, 330], // Row 3
-      [41, 390], // Row 3
+      [41, 390], // Row 4
+      [55, 450], // Row 5
+      [73, 510], // Row 5
     ];
 
     let d = null;

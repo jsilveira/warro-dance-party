@@ -8,7 +8,8 @@ module.exports = function (options = {}) { // eslint-disable-line no-unused-vars
     }
 
     // The logged in user
-    const { user } = context.params;
+    let { user } = context.params;
+    user = user || data.user;
     // The actual message text
     // Make sure that messages are no longer than 400 characters
     const text = context.data.text.substring(0, 400);
