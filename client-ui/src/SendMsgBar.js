@@ -13,6 +13,8 @@ import OnlineUsersWithReactions from "./OnlineUsersWithReactions";
 const name = (user) => (user.email || "").split('@')[0]
 
 const emojiPinia = "🤜";
+const emojiHeart = "❤️";
+const defaultEmoji = emojiHeart;
 
 function removeDiacritics(str) {
   return unorm.nfd(str || "").replace(/[\u0300-\u036f]/g, "");
@@ -39,11 +41,11 @@ class SendMsgBar extends Component {
         });
 
         let sentEmojis = findEmojis(text);
-        if(sentEmojis.length && sentEmojis[0] !== emojiPinia) {
+        if(sentEmojis.length && sentEmojis[0] !== defaultEmoji) {
           this.setState({lastEmoji: sentEmojis[0]})
         }
       } else {
-        this.sendMessage(emojiPinia);
+        this.sendMessage(defaultEmoji);
       }
     }
   }
@@ -252,8 +254,8 @@ class SendMsgBar extends Component {
 
           <button className="btn btn-sm btn-dark ml-2 p-0 shadow-sm"
                   style={{fontSize: '24px'}}
-                  onClick={() => this.sendMessage(emojiPinia)}
-                  onMouseDown={dontTakeFocus}>👊
+                  onClick={() => this.sendMessage(defaultEmoji)}
+                  onMouseDown={dontTakeFocus}>❤️
           </button>
         </div>
       </div>;
