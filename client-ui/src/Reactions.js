@@ -46,8 +46,8 @@ export default class Reactions extends Component {
       extraClasses.push('emoji')
     }
 
-    if(text === '🤜') {
-      text = _.shuffle(["👊", "🤛", "🤜"])[0]
+    if(text === '❤️') {
+      text = _.shuffle(["❤️", "💙", "💜", "💚", "💛"])[0]
     }
 
     if(text.length > 20) {
