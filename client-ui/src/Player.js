@@ -149,8 +149,8 @@ export default class Player extends Component {
             <span className={'song-title'}><em>{title}</em> - {artist}</span>
           </div>)
         } else {
-          whatIsPlaying.push(<div key={'nowplay'} className={'h5 text-secondary'}>
-            <div className={'song-title'}>{text}</div>
+          whatIsPlaying.push(<div key={'nowplay'} className={'text-white'}>
+            <span className={'song-title'}><em>{text}</em></span>
           </div>)
         }
       } else {
