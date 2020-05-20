@@ -66,6 +66,10 @@ app.get('/', (req, res) => {
   res.sendfile(app.get('public') + '/ui/index.html');
 });
 
+app.get('/test', (req, res) => {
+  res.sendfile(app.get('public') + '/ui/test.html');
+});
+
 // Set up Plugins and providers
 app.configure(express.rest());
 app.configure(socketio());

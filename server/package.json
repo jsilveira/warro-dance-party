@@ -17,7 +17,7 @@
     "start": "node src/",
     "parcel": "parcel ../client-ui/public/index.html",
     "clean": "shx rm -rf test/data/",
-    "build-ui": "rm public/ui/* & parcel build ../client-ui/public/index.html -d public/ui --public-url . --no-content-hash",
+    "build-ui": "rm public/ui/* & parcel build ../client-ui/public/index.html ../client-ui/public/test.html -d public/ui --public-url . --no-content-hash",
     "deploy": "cd .. & git subtree push --prefix server heroku master & cd server",
     "update-dependencies": "ncu -u"
   },
