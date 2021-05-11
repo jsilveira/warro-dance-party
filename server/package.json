@@ -35,7 +35,7 @@
     "feathers-memory": "^4.1.0",
     "feathers-nedb": "^5.1.0",
     "helmet": "^3.21.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "nedb": "^1.8.0",
     "parcel": "^1.12.4",
     "serve-favicon": "^2.5.0",
