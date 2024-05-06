@@ -55,7 +55,7 @@ app.get('/avatars/:id', (req, res) => {
 });
 
 app.get('/agenda', (req, res) => {
-  res.redirect(307, 'https://teamup.com/ks4u2t8nt87a8m2baw');
+  res.redirect(307, 'https://calendar.google.com/calendar/embed?src=pampawarro%40gmail.com&ctz=America%2FArgentina%2FBuenos_Aires');
 });
 
 app.get('/agenda-admin', (req, res) => {
