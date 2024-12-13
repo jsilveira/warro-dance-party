@@ -5,7 +5,7 @@
   "dependencies": {
     "@feathersjs/client": "^3.4.4",
     "lodash": "^4.17.15",
-    "moment": "^2.17.1",
+    "moment": "^2.29.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-linkify": "^1.0.0-alpha",
