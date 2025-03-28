@@ -28,6 +28,10 @@ class DanceFloor extends Component {
       logo = 'joya';
     }
 
+    if (metadata.live && (metadata.live.streamer_name || '').match(/radioaustral/i)) {
+      logo = 'radioaustral';
+    }
+
     if (this.state.logo !== logo) {
       this.setState({logo})
     }
