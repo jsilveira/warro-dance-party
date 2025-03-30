@@ -1,1 +1,15 @@
-{"background_color":"black","description":"Radio online del Pampa Warro","display":"fullscreen","icons":[{"src":"app-icon.855106f8.png","sizes":"512x512","type":"image/png"}],"name":"Warro Radio","short_name":"Warro","start_url":"index.html"}
+{
+  "background_color": "black",
+  "description": "Radio online del Pampa Warro",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "name": "Warro Radio",
+  "short_name": "Warro",
+  "start_url": "index.html"
+}
