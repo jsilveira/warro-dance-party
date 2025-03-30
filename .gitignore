@@ -22,3 +22,6 @@ tags
 # Persistent undo
 [._]*.un~
 
+server/package-lock.json
+server/bun.lock
+client-ui/package-lock.json

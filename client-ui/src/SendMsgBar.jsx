@@ -1,14 +1,10 @@
 import _ from 'lodash';
 import unorm from 'unorm';
-import moment from 'moment';
 import React, {Component} from 'react';
-import Linkify from 'react-linkify';
 
-import client from './feathers';
-import Player from './player';
-import {emojis, findEmojis} from './../../server/src/emojis';
-import Avatar from "./avatar";
-import OnlineUsersWithReactions from "./OnlineUsersWithReactions";
+import app from './feathers';
+import {emojis, findEmojis} from '../../server/src/emojis.mjs';
+import Avatar from "./Avatar";
 
 const name = (user) => (user.email || "").split('@')[0]
 
@@ -31,12 +27,12 @@ class SendMsgBar extends Component {
 
   sendMessage(text) {
     if (text) {
-      client.service('messages').create({text});
+      app.service('messages').create({text});
     } else {
       text = this.state.message.trim();
 
       if (text) {
-        client.service('messages').create({text}).then(() => {
+        app.service('messages').create({text}).then(() => {
           this.setState({message: '', autocomplete: null})
         });
 

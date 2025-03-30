@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import client from "./feathers";
 
 const name = (user) => user.email.split('@')[0]
 

@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
 
-import client from './feathers';
+import app from './feathers';
 import Player from './Player';
 import OnlineUsersWithReactions from "./OnlineUsersWithReactions";
-import SendMsgBar from "./SendMsgBar";
 import ChatConversation from "./ChatConversation";
 
 
@@ -38,12 +37,12 @@ class DanceFloor extends Component {
   }
 
   componentDidMount() {
-    client.on("authenticated", this.onAuthenticated);
+    app.on("authenticated", this.onAuthenticated);
   }
 
   componentWillUnmount() {
     // Clean up listeners
-    client.off("authenticated", this.onAuthenticated);
+    app.off("authenticated", this.onAuthenticated);
   }
 
   render() {

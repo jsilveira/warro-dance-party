@@ -115,3 +115,4 @@ test/data
 .cache/*
 
 dist/
+public/ui

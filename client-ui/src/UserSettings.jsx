@@ -1,7 +1,7 @@
 import "./UserSettings.less";
 import React, {Component} from "react";
-import Avatar from "./Avatar.js";
-import client from "./feathers.js"
+import Avatar from "./Avatar";
+import app from "./feathers.js"
 
 function getImageFile() {
   return new Promise((resolve, reject) => {
@@ -83,26 +83,28 @@ export class UserSettings extends Component {
   }
 
   componentDidMount() {
-    client.on("authenticated", this.onAuthenticated);
+    app.on("authenticated", this.onAuthenticated);
   }
 
   componentWillUnmount() {
-    client.off("authenticated", this.onAuthenticated);
+    app.off("authenticated", this.onAuthenticated);
   }
 
   showMenu(event) {
     event.preventDefault();
+    event.stopPropagation();
 
     this.setState({showMenu: true}, () => document.addEventListener('click', this.closeMenu));
   }
 
-  closeMenu() {
+  closeMenu() {    
     localStorage.setItem(TOOTLTIP_KEY_CHANGE_AVATAR, 0);
     this.setState({showMenu: false}, () => document.removeEventListener('click', this.closeMenu));
   }
 
   showMobileMenu(event) {
     event.preventDefault();
+    event.stopPropagation();  
 
     this.setState({showMobileMenu: true}, () => document.addEventListener('click', this.closeMobileMenu));
   }
@@ -118,7 +120,7 @@ export class UserSettings extends Component {
     let user = this.props.user;
     let newName = prompt("Modificá tu nombre", user.email);
     if (newName && newName !== user.email) {
-      await client.service('users').update(user.id, {email: newName});
+      await app.service('users').update(user.id, {email: newName});
       localStorage.setItem('email', newName);
     }
   }
@@ -135,7 +137,7 @@ export class UserSettings extends Component {
       .then(async url => {
         const user = this.props.user;
         try {
-          await client.service('users').update(user.id, {imageData: url});
+          await app.service('users').update(user.id, {imageData: url});
           localStorage.setItem('avatarBase64Data', url);
         } catch(err) {
           console.error(err);
@@ -151,7 +153,7 @@ export class UserSettings extends Component {
 
     return (user ? (
       <div className="UserSettings">
-        <a href="#" onClick={this.showMenu} className={'menu-toggle'}>
+        <a href="#" onClick={this.showMenu.bind(this)} className={'menu-toggle'}>
           <Avatar user={user}/>
           {localStorage.getItem(TOOTLTIP_KEY_CHANGE_AVATAR) == 1 ? tooltipCambiaTufoto : null}
         </a>

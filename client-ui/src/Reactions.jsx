@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import client from './feathers';
+import app from './feathers';
 import _ from 'lodash';
-import Avatar from "./avatar";
-import {emojis, isEmoji, findEmojis} from './../../server/src/emojis';
+import Avatar from "./Avatar";
+import {emojis, isEmoji, findEmojis} from '../../server/src/emojis.mjs';
 
 const sleep = async time => new Promise(r => setTimeout(r, time));
 
@@ -20,12 +20,12 @@ export default class Reactions extends Component {
   }
 
   componentDidMount() {
-    client.service('messages').on('created', this.handleMsg);
+    app.service('messages').on('created', this.handleMsg);
   }
 
   componentWillUnmount() {
     // Clean up listeners
-    client.service('messages').removeListener('created', this.handleMsg);
+    app.service('messages').removeListener('created', this.handleMsg);
   }
 
   async addTextReaction(text, userId) {

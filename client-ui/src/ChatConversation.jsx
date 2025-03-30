@@ -4,9 +4,9 @@ import moment from 'moment';
 import React, {Component} from 'react';
 import Linkify from 'react-linkify';
 
-import client from './feathers';
-import {findEmojis} from './../../server/src/emojis';
-import Avatar from "./avatar";
+import app from './feathers';
+import {findEmojis} from '../../server/src/emojis.mjs';
+import Avatar from "./Avatar";
 
 const name = (user) => (user.email || "").split('@')[0]
 
@@ -59,10 +59,10 @@ class ChatConversation extends Component {
   async onAuthenticated({user}) {
     this.setState({user});
 
-    client.service('users').on('updated', this.userUpdated);
+    app.service('users').on('updated', this.userUpdated);
 
     // Get all users and messages
-    const messagePage = await client.service('messages').find({
+    const messagePage = await app.service('messages').find({
         query: {
           $sort: { createdAt: -1 },
           $limit: 400
@@ -99,16 +99,16 @@ class ChatConversation extends Component {
   }
 
   componentDidMount() {
-    client.service('messages').on('created', this.scrollToBottomWithDelay);
-    client.on("authenticated", this.onAuthenticated);
+    app.service('messages').on('created', this.scrollToBottomWithDelay);
+    app.on("authenticated", this.onAuthenticated);
     this.scrollToBottom();
   }
 
   componentWillUnmount() {
     // Clean up listeners
-    client.off("authenticated", this.onAuthenticated);
-    client.service('messages').removeListener('created', this.scrollToBottomWithDelay);
-    client.service('users').off('updated', this.userUpdated);
+    app.off("authenticated", this.onAuthenticated);
+    app.service('messages').removeListener('created', this.scrollToBottomWithDelay);
+    app.service('users').off('updated', this.userUpdated);
   }
 
   handleScroll(e) {
@@ -172,7 +172,7 @@ class ChatConversation extends Component {
     }
 
     if(!res.length) {
-      res = <div className={'text-center p-2 text-time'}>No recent chat messages</div>
+      res = <div className={'text-center p-2 text-time'}>No hay mensajes recientes</div>
     }
     return res;
   }

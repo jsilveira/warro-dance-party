@@ -1,6 +1,7 @@
 const { AuthenticationService, JWTStrategy } = require('@feathersjs/authentication');
 const { LocalStrategy } = require('@feathersjs/authentication-local');
-const { expressOauth, OAuthStrategy } = require('@feathersjs/authentication-oauth');
+const { OAuthStrategy, oauth } = require('@feathersjs/authentication-oauth');
+// const { oauth2Redirect, oauth } = require('@feathersjs/express');
 
 class GitHubStrategy extends OAuthStrategy {
   async getEntityData(profile) {
@@ -21,5 +22,6 @@ module.exports = app => {
   authService.register('github', new GitHubStrategy());
 
   app.use('/authentication', authService);
-  app.configure(expressOauth());
+  app.configure(oauth({}))
+  // app.use('/oauth/callback', oauth2Redirect());
 };

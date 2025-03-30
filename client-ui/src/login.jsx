@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import client from './feathers';
+import app from './feathers';
 
 export default class Login extends Component {
   constructor(props) {
@@ -26,21 +26,21 @@ export default class Login extends Component {
     const { email } = this.state;
 
     try {
-      await client.authenticate({
+      await app.authenticate({
         strategy: 'local',
         email, password: '1234'
       });
 
       document.body.classList.add('user-authenticated');
       document.body.classList.remove('user-unknown');
-      console.log("Login with user", user)
+      console.log("Login with user")
     } catch(error) {
       this.setState({ error })
     }
   }
 
   async signup() {
-    let users = client.service('users');
+    let users = app.service('users');
 
     const { email } = this.state;
 

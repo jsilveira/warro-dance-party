@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import _ from 'lodash'
-import Avatar from "./avatar";
+import Avatar from "./Avatar";
 import Reactions from "./reactions";
-import client from "./feathers";
+import app from "./feathers";
 import SendMsgBar from "./SendMsgBar";
 
 export default class OnlineUsersWithReactions extends React.Component {
@@ -37,10 +37,10 @@ export default class OnlineUsersWithReactions extends React.Component {
   }
 
   async onAuthenticated({user}) {
-    const room = client.service('room');
+    const room = app.service('room');
 
-    client.service('messages').on('created', this.handleMsg);
-    client.service('users').on('updated', this.userUpdated);
+    app.service('messages').on('created', this.handleMsg);
+    app.service('users').on('updated', this.userUpdated);
 
     // Get all users and messages
     let users = await room.find();
@@ -49,7 +49,7 @@ export default class OnlineUsersWithReactions extends React.Component {
     this.setState({ users });
     this.users = users;
 
-    client.service('users').on('updated', this.userUpdated);
+    app.service('users').on('updated', this.userUpdated);
 
     // Add new users to the user list
     room.on('created', user => {
@@ -69,14 +69,14 @@ export default class OnlineUsersWithReactions extends React.Component {
   }
 
   componentDidMount() {
-    client.on("authenticated", this.onAuthenticated);
+    app.on("authenticated", this.onAuthenticated);
   }
 
   componentWillUnmount() {
     // Clean up listeners
-    client.off("authenticated", this.onAuthenticated);
-    client.service('messages').removeListener('created', this.handleMsg);
-    client.service('users').removeListener('updated', this.userUpdated);
+    app.off("authenticated", this.onAuthenticated);
+    app.service('messages').removeListener('created', this.handleMsg);
+    app.service('users').removeListener('updated', this.userUpdated);
   }
 
   handleMsg({text, userId}) {

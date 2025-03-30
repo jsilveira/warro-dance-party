@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Login from './login';
 import DanceFloor from './DanceFloor';
-import client from './feathers';
+import app from './feathers';
 import StarsBackground from "./StarsBackground";
 
 class Application extends Component {
@@ -33,7 +33,7 @@ class Application extends Component {
       console.log("Connected to server.", res);
       this.setState({connected: true});
 
-      client.authenticate()
+      app.authenticate()
         .then(() => console.log("Authenticated with previous session."))
         .catch((err) => {
           console.log("Previous session auth failed, creating new login...")
@@ -56,22 +56,22 @@ class Application extends Component {
     });
 
     // On successfull login
-    client.on('authenticated', login => {
+    app.on('authenticated', login => {
       console.log(`Authenticated user ${login.user.email} with ID ${login.user.id}`, );
 
       this.setState({user: login.user, requiresLogin: null});
 
-      client.service('users').on('updated', this.userUpdated);
+      app.service('users').on('updated', this.userUpdated);
     });
 
     // On logout reset all all local state (which will then show the login screen)
-    client.on('logout', () => this.setState({
+    app.on('logout', () => this.setState({
       user: null,
     }));
   }
 
   componentWillUnmount() {
-    client.service('users').removeListener('updated', this.userUpdated);
+    app.service('users').removeListener('updated', this.userUpdated);
   }
 
   render() {

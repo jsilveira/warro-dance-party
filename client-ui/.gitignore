@@ -9,9 +9,9 @@
 # production
 /build
 
-.cache/*
-dist/*
-
+.cache
+dist
+public/ui
 # misc
 .DS_Store
 .env
@@ -19,3 +19,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+server/bun.lock
