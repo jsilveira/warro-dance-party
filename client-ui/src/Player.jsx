@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import VolumeSlider from "./VolumeSlider";
 import {UserSettings} from './UserSettings';
 import _ from "lodash";
+import app from "./feathers.js";
 
 // To ensure each page reload gets a unique new stream url
 const uniqueCacheBuster = new Date().valueOf();
@@ -36,7 +37,10 @@ export default class Player extends Component {
     this.audio.addEventListener('pause', this.onPause);
 
     if(this.audio && localStorage.getItem('player-state') !== "paused") {
-      this.audio.play();
+      this.audio.play().catch((err) => {
+        localStorage.setItem('player-state', 'paused');        
+        console.error(err);
+      });
     }
   }
 
@@ -85,16 +89,28 @@ export default class Player extends Component {
   onPlay() {
     localStorage.setItem('player-state', 'playing');
     this.setState({audio: 'connecting'})
+    this.updateUserPlayStatus(true);
   }
 
   onPause() {
     localStorage.setItem('player-state', 'paused');
     this.setState({audio: 'paused'})
+    this.updateUserPlayStatus(false);
   }
 
   onVolumeChange() {
     if(this.audio) {
       console.log("Volume ",this.audio.volume)
+    }
+  }
+
+  async updateUserPlayStatus(isPlaying) {
+    if (this.props.user) {
+      try {
+        await app.service('users').update(this.props.user.id, { isPlaying });
+      } catch (err) {
+        console.error('Error updating user play status:', err);
+      }
     }
   }
 

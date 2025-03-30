@@ -14,8 +14,8 @@ export default class Avatar extends Component {
   }
 
   render() {
-    let {user, positionInCircle, style, className} = this.props;
-    let {email, id} = user;
+    let {user, positionInCircle, style, className, includeState} = this.props;
+    let {email, id, isPlaying} = user;
 
     let initials = (email || "").slice(0, 2)
 
@@ -51,10 +51,15 @@ export default class Avatar extends Component {
     style = style || {};
 
     return <div className={"avatar "+(className || "")} style={style}>
-      <div className={"round-avatar"} style={styleBgd}>
+      <div className={`round-avatar ${isPlaying === false ? 'state-paused' : ''}`} style={styleBgd}>
         { avatarUrl ? null : <span className={'initials'} style={styleColor}>{initials}</span> }
         { avatarUrl ? <img src={avatarUrl} alt={user.email} className="gravatar"/> : null }
         { avatarUrl ? null : <div className={'avatar-fill'} style={styleFill}></div> }
+        {includeState && isPlaying === false && (
+          <div className="play-status">
+            <i className="material-icons">{isPlaying ? 'play_circle' : 'pause'}</i>
+          </div>
+        )}
       </div>
       <div className="avatar-name bg-dark shadow-sm" style={styleColor}>{name(this.props.user)}</div>
     </div>;

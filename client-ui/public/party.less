@@ -248,6 +248,29 @@ html, body, body > div {
       color: white;
       box-sizing: border-box;
 
+      &.state-paused {
+        filter: saturate(0);
+      }
+
+      .play-status {
+        position: absolute;
+        top: calc(50% - 12px);
+        right: calc(50% - 12px);
+        // background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+  
+        i {
+          // font-size: 16px;
+          color: white;
+        }
+      }
+
       .gravatar {
         height: 48px;
         width: 48px;

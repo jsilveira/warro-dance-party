@@ -9,7 +9,7 @@ const inMemoryAvatar = require('../avatars/InMemoryAvatar');
 exports.Users = class Users extends Service {
   async create (data, params) {
     // This is the information we want from the user signup data
-    const { email, githubId, password, imageData } = data;
+    const { email, githubId, password, imageData, isPlaying } = data;
     // Gravatar uses MD5 hashes from an email address (all lowercase) to get the image
     const hash = crypto.createHash('md5').update(email.toLowerCase()).digest('hex');
     // The full avatar URL
@@ -18,6 +18,7 @@ exports.Users = class Users extends Service {
       email,
       password,
       githubId,
+      isPlaying,
       id: uuid.v4()
     };
 
@@ -41,6 +42,7 @@ exports.Users = class Users extends Service {
       if(imageData) {
         updatedData.avatar = await inMemoryAvatar.create({userId: id, imageData});
       }
+      console.log("UPDATED", id, updatedData)
       return super.update(id, {... user, ... updatedData});
     } else {
       throw new Error('Invalid update')

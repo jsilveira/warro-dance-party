@@ -20,7 +20,7 @@ export default defineConfig({
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization'
               }
             },
-            '^/(agenda|avatars)': {
+            '^/(agenda|avatars|test|agenda-admin)': {
               target: 'http://localhost:3030',
               changeOrigin: true,
               secure: false

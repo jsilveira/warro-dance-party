@@ -48,6 +48,10 @@ export default class Login extends Component {
 
     let newUser = { email, password: '1234' };
 
+    newUser.isPlaying = localStorage.getItem('player-state') !== "paused";
+
+    console.log("NEW", newUser)
+
     // If the user has an avatar image from the past, make sure to set it
     let lastAvatarData = localStorage.getItem('avatarBase64Data');
     if(lastAvatarData) {

@@ -168,7 +168,7 @@ export default class OnlineUsersWithReactions extends React.Component {
     let {userStates, users} = this.state;
 
     let userAvatars = users.map((user, i) => {
-      return <Avatar user={user} key={user.id} index={i} total={users.length}
+      return <Avatar user={user} key={user.id} index={i} total={users.length} includeState={true}
                      className={'circle-position ' + ((userStates[user.id] || []).join(' '))}
                      style={this.getCirclePositionStyle(i)}/>;
     });
