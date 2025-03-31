@@ -17,8 +17,7 @@ exports.Users = class Users extends Service {
     const userData = {
       email,
       password,
-      githubId,
-      isPlaying,
+      githubId,      
       id: uuid.v4()
     };
 
