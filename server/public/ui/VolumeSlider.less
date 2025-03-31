@@ -1,0 +1,69 @@
+@mobile-width: 768px;
+@volumeBarHeight: 6px;
+@colorBtns: #384363;
+@playerControlsBarHeight: 70px;
+
+.volume-slider {
+  display: flex;
+  width: 140px;
+  margin-right: 450px;
+  height: @playerControlsBarHeight;
+  align-items: center;
+
+  color: @colorBtns;
+  pointer-events: visible;
+  user-select: none;
+
+  .volume-bar-mouse-area {
+    padding: 10px;
+    padding-left: 5px;
+    margin-top: -7px;
+  }
+
+  .volume-bar {
+    cursor: pointer;
+    width: 100px;
+    height: @volumeBarHeight;
+    background-color: @colorBtns;
+    position: relative;
+    border-radius: @volumeBarHeight/2;
+  }
+
+  .volume-level-mark {
+    height: 8px;
+    width: 8px;
+    margin-left: -4px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top:  @volumeBarHeight/2 - 4;
+  }
+
+  .btn-volume {
+    cursor: pointer;
+    padding: 5px;
+
+    &:hover {
+      color: white;
+    }
+  }
+  &.muted {
+    .btn-volume {
+      color: white;
+    }
+  }
+}
+
+.user-unknown:not(.user-authenticated) {
+  .volume-slider { 
+    margin-right: 0; 
+    margin-bottom: 1em;
+    position: relative;
+    top: auto;
+    right: auto;
+  }
+}
+
+@media(max-width: @mobile-width) {
+  .volume-slider { margin-right: 0; }
+}
