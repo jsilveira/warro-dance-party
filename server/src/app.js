@@ -23,6 +23,9 @@ const authentication = require('./authentication');
 const app = express(feathers());
 
 // Load app configuration
+console.log("El param de config es "+process.env["NODE_CONFIG_DIR"])
+
+// console.log("Favicon debería estar en "+)
 app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
 app.use(helmet());
