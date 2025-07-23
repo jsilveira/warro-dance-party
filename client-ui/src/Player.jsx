@@ -45,16 +45,21 @@ export default class Player extends Component {
   }
 
   async fetchNowPlaying() {
-    let url = 'https://warro.online/api/nowplaying/1';
-    let res = await fetch(url);
+    // let url = 'https://radios.solumedia.com:6654/played?sid=1&type=json';
+    let url = '';
+    if (url) {
+      let res = await fetch(url);
 
-    let jsonRes = await res.json();
+      let jsonRes = await res.json();
 
-    this.setState({metadata: jsonRes});
-    this.props.onMetadataUpdate(jsonRes);
-    console.log(jsonRes);
+      this.setState({ metadata: jsonRes });
+      this.props.onMetadataUpdate(jsonRes);
+      console.log(jsonRes);
 
-    this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 5000);
+      this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 5000);
+    } else {
+      console.log("No now playing api url")
+    }
   }
 
   componentWillUnmount() {
