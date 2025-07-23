@@ -6,7 +6,7 @@ import app from "./feathers.js";
 
 // To ensure each page reload gets a unique new stream url
 const uniqueCacheBuster = new Date().valueOf();
-const url = "https://warro.online/radio/8000/radio.mp3?"+uniqueCacheBuster;
+const url = "https://radios.solumedia.com/6654/stream?"+uniqueCacheBuster;
 
 export default class Player extends Component {
   constructor(props) {
