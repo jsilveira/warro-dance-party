@@ -45,21 +45,38 @@ export default class Player extends Component {
   }
 
   async fetchNowPlaying() {
-    // let url = 'https://radios.solumedia.com:6654/played?sid=1&type=json';
-    let url = '';
-    if (url) {
-      let res = await fetch(url);
+    let url = 'https://radios.solumedia.com/cp/get_info.php?p=6654';
+    
+      try {
+        let res = await fetch(url);
+        let soluMediaData = await res.json();
 
-      let jsonRes = await res.json();
+        let streamerName = (soluMediaData.djusername && soluMediaData.djusername === "No DJ")  ? "" : soluMediaData.djusername;
 
-      this.setState({ metadata: jsonRes });
-      this.props.onMetadataUpdate(jsonRes);
-      console.log(jsonRes);
+        // Transform Solumedia format to expected format
+        const metadata = {
+          live: {
+            streamer_name: streamerName,
+            is_live: !!soluMediaData.djusername
+          },
+          listeners: {
+            unique: soluMediaData.ulistener || 0
+          },
+          now_playing: {
+              title: soluMediaData.title,
+          },
+          // Additional Solumedia data
+          history: soluMediaData.history
+        };
 
-      this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 5000);
-    } else {
-      console.log("No now playing api url")
-    }
+        this.setState({ metadata });
+        this.props.onMetadataUpdate(metadata);
+
+        this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 5000);
+      } catch (error) {
+        console.error("Error fetching metadata:", error);
+        this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 10000);
+      }
   }
 
   componentWillUnmount() {
@@ -142,7 +159,7 @@ export default class Player extends Component {
       let {live, listeners, now_playing, song_history, playing_next} = metadata;
 
       let {streamer_name, is_live} = live;
-      streamer_name = streamer_name || ((playing_next || {}).playlist) || 'Auto DJ'
+      streamer_name = streamer_name || ((playing_next || {}).playlist) || ''
       if(streamer_name) {
         let [a, ... c] = streamer_name.split(' - ');
 
@@ -164,10 +181,10 @@ export default class Player extends Component {
       }
 
       if(now_playing && now_playing.song) {
-        let {title, artist, text} = now_playing.song;
-        if(title && artist) {
+        let {title, text} = now_playing.song;
+        if(title) {
           whatIsPlaying.push(<div key={'nowplay'} className={'text-white'}>
-            <span className={'song-title'}><em>{title}</em> - {artist}</span>
+            <span className={'song-title'}><em>{title}</em></span>
           </div>)
         } else {
           whatIsPlaying.push(<div key={'nowplay'} className={'text-white'}>
