@@ -13,7 +13,8 @@ export default class Player extends Component {
     super(props);
 
     this.state = {
-      audio: 'paused'
+      audio: 'paused',
+      metadata: null
     };
 
     this.onAudioPlaying = this.onAudioPlaying.bind(this);
@@ -47,36 +48,37 @@ export default class Player extends Component {
   async fetchNowPlaying() {
     let url = 'https://radios.solumedia.com/cp/get_info.php?p=6654';
     
-      try {
-        let res = await fetch(url);
-        let soluMediaData = await res.json();
+    try {
+      let res = await fetch(url);
+      let soluMediaData = await res.json();
+      let streamerName = (soluMediaData.djusername && soluMediaData.djusername === "No DJ")  
+                          ? "" 
+                          : soluMediaData.djusername;
 
-        let streamerName = (soluMediaData.djusername && soluMediaData.djusername === "No DJ")  ? "" : soluMediaData.djusername;
+      // Transform Solumedia format to expected format
+      const metadata = {
+        live: {
+          streamer_name: streamerName,
+          is_live: !!soluMediaData.djusername
+        },
+        listeners: {
+          unique: soluMediaData.ulistener || 0
+        },
+        now_playing: {
+            title: soluMediaData.title,
+        },
+        // Additional Solumedia data
+        history: soluMediaData.history
+      };
 
-        // Transform Solumedia format to expected format
-        const metadata = {
-          live: {
-            streamer_name: streamerName,
-            is_live: !!soluMediaData.djusername
-          },
-          listeners: {
-            unique: soluMediaData.ulistener || 0
-          },
-          now_playing: {
-              title: soluMediaData.title,
-          },
-          // Additional Solumedia data
-          history: soluMediaData.history
-        };
+      this.setState({ metadata });
+      this.props.onMetadataUpdate(metadata);
 
-        this.setState({ metadata });
-        this.props.onMetadataUpdate(metadata);
-
-        this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 5000);
-      } catch (error) {
-        console.error("Error fetching metadata:", error);
-        this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 10000);
-      }
+      this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 5000);
+    } catch (error) {
+      console.error("Error fetching metadata:", error);
+      this.fetchTimeout = setTimeout(() => this.fetchNowPlaying(), 10000);
+    }
   }
 
   componentWillUnmount() {
@@ -180,8 +182,8 @@ export default class Player extends Component {
         uniqueListeners = listeners.unique;
       }
 
-      if(now_playing && now_playing.song) {
-        let {title, text} = now_playing.song;
+      if(now_playing) {
+        let {title, text} = now_playing;
         if(title) {
           whatIsPlaying.push(<div key={'nowplay'} className={'text-white'}>
             <span className={'song-title'}><em>{title}</em></span>
