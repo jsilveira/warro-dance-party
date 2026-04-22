@@ -1,0 +1,25 @@
+{
+  "name": "warro-dance-party",
+  "description": "Warro dance party — monorepo (server + client-ui)",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client-ui"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "npm start --workspace=server",
+    "build": "npm run build --workspace=client-ui",
+    "heroku-postbuild": "npm run build --workspace=client-ui",
+    "dev": "concurrently -n server,ui -c blue,magenta \"npm run dev --workspace=server\" \"npm run dev --workspace=client-ui\"",
+    "dev:server": "npm run dev --workspace=server",
+    "dev:ui": "npm run dev --workspace=client-ui",
+    "dev:prod": "npm run dev:prod --workspace=client-ui"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
