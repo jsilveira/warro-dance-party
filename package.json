@@ -11,13 +11,13 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "npm start --workspace=server",
-    "build": "npm run build --workspace=client-ui",
-    "heroku-postbuild": "npm run build --workspace=client-ui",
-    "dev": "concurrently -n server,ui -c blue,magenta \"npm run dev --workspace=server\" \"npm run dev --workspace=client-ui\"",
-    "dev:server": "npm run dev --workspace=server",
-    "dev:ui": "npm run dev --workspace=client-ui",
-    "dev:prod": "npm run dev:prod --workspace=client-ui"
+    "start": "cd server && npm start",
+    "build": "cd client-ui && npm run build",
+    "heroku-postbuild": "cd client-ui && npm run build",
+    "dev": "concurrently -n server,ui -c blue,magenta \"npm run dev:server\" \"npm run dev:ui\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:ui": "cd client-ui && npm run dev",
+    "dev:prod": "cd client-ui && npm run dev:prod"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

@@ -40,3 +40,7 @@ client-ui/dist/
 .env
 .env.local
 .env.*.local
+
+# NeDB runtime datafiles
+data/
+server/data/

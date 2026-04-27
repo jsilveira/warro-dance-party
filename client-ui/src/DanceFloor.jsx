@@ -11,7 +11,7 @@ class DanceFloor extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      logo: 'w',
+      logo: 'radioaustral',
     };
 
     this.onAuthenticated = this.onAuthenticated.bind(this);
@@ -22,13 +22,13 @@ class DanceFloor extends Component {
   }
 
   onMetadataUpdate(metadata) {
-    let logo = 'w';
+    let logo = 'radioaustral';
     if (metadata.live && (metadata.live.streamer_name || '').match(/joya/i)) {
       logo = 'joya';
     }
 
-    if (metadata.live && (metadata.live.streamer_name || '').match(/radioaustral/i)) {
-      logo = 'radioaustral';
+    if (metadata.live && (metadata.live.streamer_name || '').match(/warro/i)) {
+      logo = 'w';
     }
 
     if (this.state.logo !== logo) {

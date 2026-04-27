@@ -13,7 +13,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev": "node --watch src/",
+    "dev": "node --watch-path=./src src/index.js",
     "start": "node src/"
   },
   "dependencies": {
