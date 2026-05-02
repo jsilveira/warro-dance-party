@@ -3,16 +3,22 @@ import socketio from '@feathersjs/socketio-client'
 import io from 'socket.io-client'
 import authentication from '@feathersjs/authentication-client'
 
-// let socketUri = 'http://local.opinautos.com:3030';
-// let socketUri = window.realtimeChatUri || 'https://warro-dance-party.herokuapp.com';
-let socketUri = window.realtimeChatUri || 'https://warro-dance-party.herokuapp.com';
-console.log(`✅ Using realtime sockets at ${socketUri}`);
-window.socketUri = socketUri;
+// Connection target resolution:
+//   1. window.realtimeChatUri (runtime override, e.g. injected by embedder)
+//   2. VITE_API_URL (build/dev env, e.g. `npm run dev:prod` points at production)
+//   3. same-origin — in dev this goes through Vite's proxy to the local server;
+//      in production the UI is served by the server itself.
+const apiUrl = window.realtimeChatUri || import.meta.env.VITE_API_URL || undefined;
+if (apiUrl) {
+  console.log(`✅ Using realtime sockets at ${apiUrl}`);
+} else {
+  console.log(`✅ Using realtime sockets at same origin (${window.location.origin})`);
+}
+window.socketUri = apiUrl || window.location.origin;
 
-const socket = io(socketUri, {
-  transports: ['websocket'],
-  timeout: 30000
-});
+const socket = apiUrl
+  ? io(apiUrl, { transports: ['websocket'], timeout: 30000 })
+  : io({ transports: ['websocket'], timeout: 30000 });
 
 const app = feathers();
 window.io = socket;

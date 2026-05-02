@@ -1,7 +1,8 @@
 {
-  "name": "warro-dance-party",
-  "description": "Warro dance party",
+  "name": "warro-dance-party-server",
+  "description": "Warro dance party — backend",
   "version": "1.0.0",
+  "private": true,
   "main": "src",
   "directories": {
     "lib": "src",
@@ -9,16 +10,11 @@
     "config": "config/"
   },
   "engines": {
-    "node": ">=12.0.0",
-    "npm": ">= 6.0.0"
+    "node": ">=20"
   },
   "scripts": {
-    "dev": "nodemon src/",
-    "start": "node src/",
-    "clean": "shx rm -rf test/data/",
-    "build-ui": "rm -r public/ui/* & cd ../client-ui && npm run build && cp -r dist/* ../server/public/ui/",
-    "deploy": "cd .. & git subtree push --prefix server heroku master & cd server",
-    "update-dependencies": "ncu -u"
+    "dev": "node --watch-path=./src src/index.js",
+    "start": "node src/"
   },
   "dependencies": {
     "@feathersjs/authentication": "^5.0.33",
@@ -39,14 +35,5 @@
     "serve-favicon": "^2.5.0",
     "uuid": "^7.0.3",
     "winston": "^3.2.1"
-  },
-  "devDependencies": {
-    "axios": "^0.19.2",
-    "eslint": "^6.8.0",
-    "mocha": "^7.1.1",
-    "nodemon": "^2.0.2",
-    "npm-check-updates": "^4.0.4",
-    "nyc": "^15.0.0",
-    "shx": "^0.3.2"
   }
 }
